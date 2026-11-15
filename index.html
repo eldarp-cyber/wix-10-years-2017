@@ -315,6 +315,12 @@
     body.stack .cal-panel img.cal-panel__v2 { display: block; }
     .cal-panel__v2 { display: none; }
     @media (min-width: 760px) {
+      /* on screens wider than the frame the picture has to grow past the panel's height to fill its width: it keeps
+         its top at the panel's top edge (as in the frame) and gives up the extra at the bottom instead */
+      body.stack .cal-panel img.cal-panel__v2 { object-position: 50% 0; }
+      /* the pictures with room round them in the frame (inset in V2) are never scaled past the panel's height: on wider
+         screens the event's colour carries on either side (on taller ones above them, as they sit on its bottom edge) */
+      body.stack .cal-panel--inset img.cal-panel__v2 { object-fit: contain; object-position: 50% 100%; }
       body.stack .cal-title {
         top: calc(var(--tt, 100.35) * 1px * var(--s));
         font-size: calc(38px * var(--s)); line-height: calc(46px * var(--s)); letter-spacing: -0.01em;
@@ -796,12 +802,12 @@
     // at the top with the month in it (ink) and the day under it (top: the day's top on the page, track: its tracking);
     // title: where version 2 breaks the title differently
     const V2 = [
-      { color: "#0575fb", ink: "#ffffff", img: "assets/panel-v2/jan-31.jpg", track: -2, title: "We shared our Super Bowl ad\nwith Gal Gadot & Jason Statham" },
+      { color: "#0575fb", ink: "#ffffff", img: "assets/panel-v2/jan-31.jpg", inset: true, track: -2, title: "We shared our Super Bowl ad\nwith Gal Gadot & Jason Statham" },
       { color: "#f4511e", ink: "#ffffff", img: "assets/panel-v2/feb-23.jpg", track: -2 },
-      { color: "#54c88b", ink: "#ffffff", img: "assets/panel-v2/mar-03.jpg", track: -5 },
-      { color: "#d6d0fd", ink: "#000000", img: "assets/panel-v2/may-17.jpg", track: -5 }, // the purple of its picture (Figma 5240-9751), so black text
-      { color: "#fbcbfd", ink: "#000000", img: "assets/panel-v2/jun-22.jpg", track: -3 },
-      { color: "#77574a", ink: "#ffffff", img: "assets/panel-v2/aug-12.jpg", track: -5, title: "Usain Bolt ran his\nlast race",
+      { color: "#54c88b", ink: "#ffffff", img: "assets/panel-v2/mar-03.jpg", inset: true, track: -5 },
+      { color: "#d6d0fd", ink: "#000000", img: "assets/panel-v2/may-17.jpg", inset: true, track: -5 }, // the purple of its picture (Figma 5240-9751), so black text
+      { color: "#fbcbfd", ink: "#000000", img: "assets/panel-v2/jun-22.jpg", inset: true, track: -3 },
+      { color: "#77574a", ink: "#ffffff", img: "assets/panel-v2/aug-12.jpg", inset: true, track: -5, title: "Usain Bolt ran his\nlast race",
         body: "The fastest man in the world pulled up injured in the relay\nfinal in London – not the ending anyone wanted" },
       { color: "#58dce8", ink: "#000000", img: "assets/panel-v2/nov-27.jpg", track: -3 },
       { color: "#ffca4e", ink: "#000000", img: "assets/panel-v2/dec-05.jpg", track: -3,
@@ -1264,6 +1270,7 @@
         node.appendChild(pic);
         // decoded up front, so it's there the moment its panel comes up (not a beat after)
         pic.decode().catch(() => {});
+        if (page.v2.inset) node.classList.add("cal-panel--inset");
         // and the phone's own picture (shown instead on phones; loaded lazily on wide screens)
         const mpic = document.createElement("img");
         mpic.className = "cal-panel__m";
