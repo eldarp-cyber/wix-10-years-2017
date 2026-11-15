@@ -1,0 +1,136 @@
+/* Shared by both versions: tokens, header, hero */
+
+:root {
+  --bg: #ffffff;
+  --ink: #000000;
+  --chip: #f5f5f5;
+  --accent: #de5765;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--ink); }
+body { overflow-x: hidden; font-family: "Wix Madefor Text", system-ui, sans-serif; }
+/* draw text the way Figma does (greyscale antialiasing): the Mac default thickens strokes, so Medium read heavier than in the design */
+body { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+/* ---------- Header ---------- */
+.header {
+  position: fixed; z-index: 10;
+  /* no band: the page shows through round the chips */
+  top: 0; left: 0; right: 0; height: 39px; padding: 8px 8px 0;
+  display: flex; gap: 8px; align-items: flex-start;
+  background: transparent;
+}
+.header__brand, .header__link {
+  display: flex; align-items: center;
+  height: 33px; padding: 9px 16px;
+  background: var(--chip); border-radius: 14px;
+  overflow: hidden;
+}
+.header__brand { flex: 0 0 137px; height: 30.5px; color: inherit; text-decoration: none; cursor: pointer; }
+.header__link {
+  flex: 0 0 147px; justify-content: center;
+  font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 500;
+  font-size: 12px; line-height: 15px; letter-spacing: 0.8px;
+  color: var(--ink); text-decoration: none; white-space: nowrap;
+}
+/* the timeline bar takes the room between the brand and the gift link; its frames keep their place in it */
+.header__link.header__timeline { position: relative; flex: 1 1 auto; min-width: 0; }
+.header__timeline-label { position: relative; }
+.header__seg {
+  position: absolute; top: 3.33px; height: 24.57px;
+  left: calc(var(--x) / 1124 * 100%); width: calc(var(--w) / 1124 * 100%);
+  background: var(--c); border-radius: 5px;
+  /* fills in from the left */
+  clip-path: inset(0 calc(100% - var(--fill, 0) * 100%) 0 0 round 5px);
+}
+.header__seg:first-child { border-radius: 10px 5px 5px 10px; }
+.header__seg:nth-last-child(2) { border-radius: 5px 10px 10px 5px; }
+.logo { position: relative; width: 102.234px; height: 12.495px; flex: none; }
+.logo__wix {
+  position: absolute; inset: 1.28% 75.04% 19.63% 0;
+  -webkit-mask: url("assets/logo-wix-mask.svg") 0 0.001px / 25.523px 9.881px no-repeat;
+          mask: url("assets/logo-wix-mask.svg") 0 0.001px / 25.523px 9.881px no-repeat;
+}
+.logo__wix img, .logo__text img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.logo__text { position: absolute; inset: 0.99% 0 0.98% 28.19%; }
+
+/* ---------- Hero: "So what happened in 2017" ---------- */
+.hero {
+  position: relative;
+  /* height is set from JS: one viewport + the distance the text stays pinned */
+}
+.hero__stage {
+  position: sticky; top: 0;
+  height: 100vh; height: 100svh;
+  overflow: hidden;
+}
+/* composition origin = centre of the 1440×724 frame (720, 362) */
+.hero__comp {
+  position: absolute; left: 50%; top: 50%;
+  width: 0; height: 0;
+  transform: scale(var(--hero-scale, 1));
+}
+/* red underline under "in 2017", with a dot that travels along it */
+.hero__rule { position: absolute; left: -194.09px; top: 149.32px; width: 399.258px; height: 5px; background: var(--accent); }
+.hero__dot {
+  position: absolute; left: 197.08px; top: 142.01px; width: 19px; height: 19px;
+  display: block; will-change: transform;
+}
+.hero__title {
+  position: absolute; margin: 0;
+  font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif;
+  font-weight: 500; font-size: 138px; letter-spacing: -6px;
+  text-align: center; white-space: nowrap;
+  transform: translateX(-50%);
+}
+.hero__title--top { left: 0; top: -189.39px; line-height: 110px; }
+.hero__title--in  { left: -147.73px; top: 27.61px; line-height: 123.2px; }
+.hero__year {
+  position: absolute; left: 67.73px; top: 36.61px; margin: 0;
+  font-family: "Snell Roundhand", "Pinyon Script", cursive;
+  font-weight: 700; font-size: 139.776px; line-height: 124.786px; letter-spacing: -6.0772px;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+.hero__year .t0 { letter-spacing: -2.08px; }
+.hero__year .t1 { letter-spacing: -12.08px; }
+/* slot-machine reels for the last two digits */
+.reel { position: relative; display: inline-block; }
+.reel__size { visibility: hidden; }           /* sizes the reel exactly like the final digit */
+/* hard-edged window hugging the digits' own top and bottom (set from JS); wide enough for the swashes */
+.reel__window {
+  position: absolute; left: -60px; right: -60px; top: 0; height: 124.786px;
+  overflow: hidden; pointer-events: none;
+}
+.reel__strip { position: absolute; left: 60px; top: 0; will-change: transform; }
+.reel__strip > span { position: absolute; left: 0; top: 0; height: 124.786px; }
+
+/* ---------- Version switch (for comparing the two versions) ---------- */
+.version-switch {
+  display: none !important;   /* hidden for now while we focus on "new"; remove this line to bring it back */
+  position: fixed; z-index: 20;
+  left: 50%; bottom: 16px; transform: translateX(-50%);
+  display: flex; gap: 2px; padding: 3px;
+  background: var(--chip); border-radius: 14px;
+  font-family: Inter, system-ui, sans-serif; font-size: 10px; letter-spacing: 0.8px;
+}
+.version-switch a {
+  display: block; padding: 8px 16px; border-radius: 11px;
+  color: var(--ink); text-decoration: none;
+}
+.version-switch a[aria-current="page"] { background: var(--ink); color: var(--bg); }
+/* on wide screens it moves under the header, clear of the calendar's bottom line of text */
+@media (min-width: 760px) {
+  .version-switch { left: auto; right: 8px; top: 47px; bottom: auto; transform: none; }
+}
+
+@media (max-width: 640px) {
+  .header__brand { flex: 0 0 auto; padding: 9px 12px; }
+  .header__link { flex: 0 0 auto; padding: 9px 12px; }
+  /* no room for the label: the bar shows only its frames (the label stays for screen readers) */
+  .header__link.header__timeline { padding: 0; }
+  .header__timeline-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  /* and its frames share it out evenly */
+  .header__seg { left: calc(3px + var(--i) * (100% - 3px) / 8); width: calc((100% - 3px) / 8 - 3px); }
+}

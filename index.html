@@ -1,0 +1,1999 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wix Anniversary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Pinyon+Script&family=Wix+Madefor+Display:wght@500;600&family=Wix+Madefor+Text:ital,wght@0,400;0,500;1,500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    /* ---------- Opening: "So what happened in 2017" (Figma 5216-8300), pinned until the calendar takes over ---------- */
+    /* --o scales the 1440×1022 frame to the viewport (set from JS); everything is placed from the frame's centre */
+    .opening { position: absolute; inset: 0; --o: 1; overflow: hidden; }
+    /* the 2017 in black, exported from Figma */
+    .opening__year {
+      position: absolute; display: block; max-width: none;
+      left: calc(50% - 664.719px * var(--o)); top: calc(50% - 213.338px * var(--o));
+      width: calc(1342.289px * var(--o)); height: calc(481.804px * var(--o));
+    }
+    .opening__title, .opening__in, .opening__so, .opening__q {
+      position: absolute; margin: 0;
+      left: calc(50% - 48.38px * var(--o)); top: calc(50% - 52.13px * var(--o));
+      width: calc(596.375px * var(--o));
+      transform: translateX(-50%);
+      font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif;
+      font-weight: 500; font-size: calc(47.971px * var(--o)); line-height: 1; letter-spacing: -0.03em;
+      text-transform: uppercase; text-align: center;
+      color: #000;
+    }
+    /* "so" left of the 2, "in" and "?" either side of the 7, on one line with "what happened" */
+    .opening__so { width: auto; left: calc(50% - 531.56px * var(--o)); top: calc(50% - 34.13px * var(--o)); }
+    .opening__in { width: auto; left: calc(50% + 329.5px * var(--o)); top: calc(50% - 34.13px * var(--o)); }
+    .opening__q { width: auto; left: calc(50% + 543.42px * var(--o)); top: calc(50% - 34.13px * var(--o)); }
+    .opening__note {
+      position: absolute; margin: 0;
+      left: 50%; top: calc(50% + 302.67px * var(--o));
+      width: calc(324.75px * var(--o));
+      transform: translateX(-50%);
+      font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 500;
+      font-size: calc(21px * var(--o)); line-height: calc(25px * var(--o));
+      text-align: center;
+    }
+    /* the event-coloured blocks around the 2017. Each sits at its own depth: they drift up at different speeds as the
+       first event comes up, and their colour gathers into their middle near the frame's centre and fades to grey
+       away from it. Place, motion and gradient are set from JS. */
+    .hero-block {
+      position: absolute; left: 0; top: 0; border-radius: calc(10px * var(--o));
+      background: #ededed; will-change: transform, background;
+      /* blurred, so they read as soft light rather than cards */
+      filter: blur(calc(16px * var(--o)));
+    }
+    /* version 2 keeps them sharp, as in Figma 5216-8300 */
+    body.stack .hero-block { filter: none; }
+
+    /* the opening (Figma 5240-10164): the 2017 in blue script (Whisper, outlined from Figma), the words in blue over it
+       ("so" on its own line, "what happened in" under it) and a "?" under it, small squares in the events' colours
+       scattered round it (they drift up at their own speeds as the first event comes up, set from JS) */
+    /* (the black 2017 and the big gradient blocks of Figma 5216-8300 are kept in the markup but no longer shown) */
+    .opening__year--v2, .hero-block { display: none; }
+    .opening__year {
+      left: calc(50% - 661.03px * var(--o)); top: calc(50% - 233.41px * var(--o));
+      width: calc(1335px * var(--o)); height: calc(475px * var(--o));
+    }
+    .opening__title, .opening__so, .opening__in,
+    .opening__q, .opening__note { color: var(--ink); }
+    /* the words hang over the 2017's top edge (--o places that edge); --p scales the row of words: the frame's scale
+       on wide screens, larger on phones, where the 2017 shrinks to the width but the words must stay readable */
+    .opening__title { display: contents; }
+    .opening__title br { display: none; }
+    :is(.opening__so, .opening__in, .opening__q, .opening__what, .opening__happened) {
+      position: absolute; width: auto; margin: 0; transform: translateX(-50%); white-space: nowrap;
+      font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif; font-weight: 600;
+      font-size: calc(38px * var(--p, var(--o))); line-height: 1; letter-spacing: -0.03em; text-transform: uppercase; color: #1a73e8;
+    }
+    .opening__so { left: calc(50% + 8.5px * var(--p, var(--o)) + var(--dx, 0px)); top: calc(50% - 233.41px * var(--o) - 125.28px * var(--p, var(--o))); }
+    .opening__what { left: calc(50% - 125.57px * var(--p, var(--o)) + var(--dx, 0px)); top: calc(50% - 233.41px * var(--o) - 72.09px * var(--p, var(--o))); }
+    .opening__happened { left: calc(50% + 46.5px * var(--p, var(--o)) + var(--dx, 0px)); top: calc(50% - 233.41px * var(--o) - 72.09px * var(--p, var(--o))); }
+    .opening__in { left: calc(50% + 180.57px * var(--p, var(--o)) + var(--dx, 0px)); top: calc(50% - 233.41px * var(--o) - 72.09px * var(--p, var(--o))); }
+    /* the "?" hangs just under the 2017's bottom edge, between the 0 and the 1 */
+    .opening__q { left: calc(50% - 44px * var(--o)); top: calc(50% + 241.02px * var(--o) + 5.98px * var(--p, var(--o))); }
+    @media (min-width: 760px) {
+      .opening__note {
+        top: calc(50% + 354.33px * var(--o)); width: calc(523.48px * var(--o));
+        font-size: calc(21px * var(--o)); line-height: calc(29px * var(--o));
+      }
+      .opening__note br { display: none; }
+    }
+    .hero-dot {
+      position: absolute; left: 0; top: 0; width: calc(20px * var(--o)); height: calc(20px * var(--o));
+      border-radius: calc(5px * var(--o)); background: var(--c); will-change: transform;
+    }
+    /* phones (Figma 5280-599, a 390 × 844 frame): everything placed from the screen's centre, scaled by --m (set from
+       JS: the screen against that frame). The 2017 runs off both sides; the words above it in one block */
+    @media (max-width: 759px) {
+      .opening { --m: 1; }
+      .opening__year {
+        left: calc(50% - 216.5px * var(--m)); top: calc(50% - 68.1px * var(--m));
+        width: calc(444.4px * var(--m)); height: calc(158.1px * var(--m));
+      }
+      :is(.opening__so, .opening__in, .opening__what, .opening__happened) { font-size: calc(28px * var(--m)); }
+      .opening__so { left: calc(50% - 3.5px * var(--m)); top: calc(50% - 156.7px * var(--m)); }
+      .opening__what { left: calc(50% - 104.9px * var(--m)); top: calc(50% - 119px * var(--m)); }
+      .opening__happened { left: calc(50% + 19.1px * var(--m)); top: calc(50% - 119px * var(--m)); }
+      .opening__in { left: calc(50% + 121.6px * var(--m)); top: calc(50% - 119px * var(--m)); }
+      .opening__q { left: 50%; top: calc(50% + 107px * var(--m)); font-size: calc(26px * var(--m)); }
+      .hero-dot { width: calc(14px * var(--m)); height: calc(14px * var(--m)); border-radius: calc(2.5px * var(--m)); }
+    }
+    /* white, so it covers the opening as it comes up over it */
+    /* the first event comes up over the opening whole, exactly as it looks once in place: white top, title, paragraph,
+       and in version 2 the hour lines, the Now line and the panel's chip; nothing changes when it lands */
+    .cal-layer { position: absolute; inset: 0; background: var(--bg); will-change: transform; }
+    /* version 2: one more grey hour line along the frame's top edge, so the first event comes up over the opening
+       with its ruled top showing (once in place it sits under the header) */
+    body.stack .cal-layer { box-shadow: inset 0 1px 0 #ebebeb; }
+    /* version 2, first event only (Figma 5217-8667): an all-day event across the very top of the day, behind the
+       header's chips — "New year 2017 · Jan 01", styled like the ending's bars. It leaves upward as the page turns. */
+    .cal-allday { display: none; }
+    body.stack .cal-allday {
+      display: flex; align-items: center; gap: 4.8px; position: absolute; z-index: 3; left: 0; right: 0; top: 0;
+      height: 17px; padding: 0 0 0 21px; box-sizing: border-box; border-radius: 6px; overflow: hidden;
+      background: #ffd00d; color: #000;
+      font: 500 10px / 1 "Wix Madefor Text", system-ui, sans-serif; white-space: pre; pointer-events: none; will-change: transform;
+    }
+    .cal-allday__when { font-weight: 400; opacity: 0.8; }
+    .opening.is-covered { visibility: hidden; }
+    [hidden] { display: none !important; }
+
+    /* ---------- Intro: calendar flip ---------- */
+    .intro {
+      position: relative;
+      /* height is set from JS: one viewport + one flip length per page turn */
+    }
+    /* --s scales the 1440×1022 frame to the viewport (set from JS) */
+    .intro__stage {
+      position: sticky; top: 0;
+      height: 100vh; height: 100svh;
+      overflow: hidden;
+      --s: 1;
+    }
+    /* positioned on the front page; offsets match the 1440×1022 frame (page at 559,405) */
+    .calendar {
+      position: absolute; z-index: 2;
+      left: calc(50% + 8px * var(--s)); top: calc(50% + 55.67px * var(--s));
+      width: 338px; height: 323px;
+      /* --lift: after the last event the pad scrolls away with the page (set from JS) */
+      transform: translate(-50%, calc(-50% - var(--lift, 0px))) scale(var(--cal-scale, 1));
+    }
+    /* pages are drawn as flat 2D outlines so the line weight and the day never distort */
+    .calendar__svg { position: absolute; left: 0; top: 0; overflow: visible; }
+    .page__shape { fill: var(--bg); stroke: var(--ink); stroke-width: 1; stroke-linejoin: round; }
+    .page__num {
+      font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 400;
+      fill: var(--ink);
+    }
+
+    /* ---------- Background art per event (cut together with the texts) ---------- */
+    /* each image sits where its Figma frame puts it (--bx/--by: its centre from the frame's centre,
+       --bw/--bh: its size; set from JS), and never smaller than the stage */
+    .cal-bg { position: absolute; inset: 0; overflow: hidden; }
+    /* holds the art; in version 2 it becomes the rounded frame under the header (see below) */
+    .cal-frame { position: absolute; inset: 0; }
+
+    /* ruled lines (Figma, 1920 × 1028.01 a sheet): --ly puts the first sheet's top relative to the frame's
+       centre; sheets repeat downwards (set from JS) and meet exactly on a line, so the ruling never breaks */
+    .lines { position: absolute; left: 0; right: 0; top: calc(50% + var(--ly) * var(--ls)); will-change: transform; }
+    .lines img {
+      position: absolute; left: 0; display: block; max-width: none;
+      width: 100%; height: calc(1030.01px * var(--ls));
+      top: calc(var(--k) * 1028.01px * var(--ls));
+    }
+    .cal-bg .lines { --ls: var(--s); }
+    .cal-bg img {
+      position: absolute; display: block; max-width: none;
+      left: calc(50% + var(--bx) * var(--s)); top: calc(50% + var(--by) * var(--s) - var(--fy, 0px));
+      width: max(calc(var(--bw) * var(--s)), calc(100% + var(--bpadx)));
+      height: max(calc(var(--bh) * var(--s)), calc(100% + var(--bpady)));
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+    /* over the art the header loses its white band and its chips turn white (Figma) */
+    body.has-bg .header { background: transparent; }
+    body.has-bg .header__brand, body.has-bg .header__link { background: var(--bg); }
+
+    /* floating art: cut-outs that rise in from below as their event's page turns in, and go on up as it
+       turns away; placed like the Figma frame (centre from the frame's centre, size, rotation; set from JS) */
+    .cal-art { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+    .cal-art__item {
+      position: absolute; overflow: hidden;
+      left: calc(50% + var(--ax) * var(--s)); top: calc(50% + var(--ay) * var(--s) - var(--fy, 0px));
+      width: calc(var(--aw) * var(--s)); height: calc(var(--ah) * var(--s));
+      transform: translate(-50%, -50%) translateY(var(--rise, 0px)) rotate(var(--arot));
+      will-change: transform;
+    }
+    /* the frame shows the top part of the picture */
+    .cal-art__item img { position: absolute; left: 0; top: 0; display: block; width: 100%; height: var(--acrop); max-width: none; }
+
+    /* ---------- Texts around the pad (swapped with each turn) ---------- */
+    /* over the panels; the pad sits above them (z-index 2), so at the end it scrolls up over the title and description */
+    .cal-title, .cal-desc, .cal-month, .cal-year { position: absolute; z-index: 1; margin: 0; color: var(--ink); }
+    .cal-title {
+      left: 50%; top: calc(66.65px * var(--s));
+      transform: translateX(-50%);
+      font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif;
+      font-weight: 500; font-size: calc(47.971px * var(--s)); line-height: 1; letter-spacing: -0.03em;
+      text-transform: uppercase; text-align: center; white-space: nowrap;
+    }
+    .cal-desc, .cal-month, .cal-year {
+      bottom: calc(36.32px * var(--s));
+      font-family: "Wix Madefor Text", system-ui, sans-serif;
+      font-style: italic; font-weight: 500;
+      font-size: calc(21px * var(--s)); line-height: calc(22px * var(--s));
+      text-transform: uppercase;
+    }
+    .cal-desc {
+      left: 50%; width: calc(534px * var(--s));
+      transform: translateX(-50%);
+      text-align: center;
+    }
+    .cal-month { left: calc(66px * var(--s)); white-space: nowrap; }
+    .cal-year { right: calc(71px * var(--s)); white-space: nowrap; }
+
+    /* ending: the last event's texts scroll up off the screen whole, one after another (set from JS) */
+    .cal-title, .cal-desc, .cal-month, .cal-year { will-change: translate; }
+
+    /* ---------- Version 2: the art sits inside a rounded frame under the header (Figma) ---------- */
+    /* --fy: the frame's centre sits this far below the stage's, so the art keeps its place in the 1440×1022 frame */
+    body.framed .cal-frame { inset: 46px 8px 8px; border-radius: 14px; overflow: hidden; background: var(--chip); --fy: 19px; } /* = FRAME_FY */
+    /* the header keeps its white band and its chips take the event's colour (set from JS) */
+    body.framed .header, body.framed.has-bg .header { background: transparent; }
+    body.framed .header__brand, body.framed .header__link,
+    body.framed.has-bg .header__brand, body.framed.has-bg .header__link { background: var(--chip-ev, var(--chip)); }
+    @media (min-width: 760px) {
+      body.framed .calendar { top: calc(50% + 30.67px * var(--s)); }
+      /* the texts keep their distance from the frame's edges (Figma), and the frame sits a fixed 46px
+         below the top (under the header) and 8px in from the other sides, so on smaller screens only the
+         distance inside the frame shrinks, never the space under the header */
+      body.framed .cal-title { top: calc(46px + 20.65px * var(--s)); }
+      body.framed .cal-desc, body.framed .cal-month, body.framed .cal-year { bottom: calc(8px + 28.32px * var(--s)); }
+      body.framed .cal-month { left: calc(8px + 41.16px * var(--s)); }
+      body.framed .cal-year { right: calc(8px + 32.65px * var(--s)); }
+    }
+
+    /* ---------- Version 1: the texts sit on white at the top; under them a panel of the event's colour / picture
+       fills the rest of the screen, with the pad in its middle (Figma 5147-7532). The next event's panel scrolls up
+       over the current one while the page turns (set from JS). ---------- */
+    /* the panels start at y 312.43 of the 1440×1022 frame and run to the bottom of the screen */
+    .cal-panels { position: absolute; left: 0; right: 0; bottom: 0; top: calc(312.43px * var(--s)); overflow: hidden; display: none; }
+    body.panels .cal-panels { display: block; }
+    body.panels .cal-frame { display: none; }
+    .cal-panel { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
+    .cal-panel[hidden] { display: none; }
+    /* the picture keeps its box in the frame (--bx/--by: its centre from the panel's centre, --bw/--bh: its size),
+       and never leaves part of the panel uncovered */
+    .cal-panel img {
+      position: absolute; display: block; max-width: none;
+      left: calc(50% + var(--bx) * var(--s)); top: calc(50% + var(--by) * var(--s));
+      width: max(calc(var(--bw) * var(--s)), calc(100% + var(--bpadx)));
+      height: max(calc(var(--bh) * var(--s)), calc(100% + var(--bpady)));
+      transform: translate(-50%, -50%);
+      object-fit: cover;
+    }
+    /* finished events (Figma 5173-900 … 5173-1319): as the next event comes in, the picture of the one before shrinks
+       into the top-left corner over the panel line, turning into its colour (--c, --tint), and the ones finished
+       before it each move one step further up the pile (box set from JS) */
+    .cal-stack { position: absolute; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; display: none; }
+    body.stack .cal-stack { display: block; }
+    /* version 2: the header's timeline keeps no colour frames */
+    body.stack .header__seg { display: none; }
+    .cal-stack__item { position: absolute; left: 0; top: 0; overflow: hidden; background: var(--c); will-change: left, top, width, height; }
+    .cal-stack__item img { display: none; }
+    /* version 2: the event's picture shrinks into the pile with its block (covered by the colour as it lands) */
+    body.stack .cal-stack__item img.cal-stack__pic {
+      display: block; position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover;
+    }
+    body.stack .cal-stack__item .cal-chip { z-index: 1; }
+    .cal-stack__item::after { content: ""; position: absolute; inset: 0; background: var(--c); opacity: var(--tint, 0); }
+    /* the month is printed on the pages under the day (version 1 only) */
+    .page__month { font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 400; fill: var(--ink); }
+    body:not(.panels) .page__month, body.stack .page__month { display: none; }
+    /* version 2: the month in a band of the event's colour across the top of the page (Figma 5216-6778) */
+    .page__tab { font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 400; }
+    body:not(.stack) .page__band, body:not(.stack) .page__tab { display: none; }
+    /* the title and its paragraph sit centred in the white above the panel (Figma 5173-777) */
+    body.panels .cal-title { top: calc(95.24px * var(--s)); }
+    body.panels .cal-desc {
+      top: calc(211.68px * var(--s)); bottom: auto; width: auto;
+      font-style: normal; text-transform: none; white-space: nowrap;
+    }
+    body.panels .cal-month, body.panels .cal-year { display: none; }
+    /* over the panels the header keeps its grey chips, with no band behind them (the page shows through) */
+    body.panels.has-bg .header { background: transparent; }
+    body.panels.has-bg .header__brand, body.panels.has-bg .header__link { background: var(--chip); }
+    /* centred in the panel: (frame top 312.43 + bottom) / 2, less 13.2 so it sits where Figma has it */
+    body.panels .calendar { top: calc(50% + 143px * var(--s)); }
+    /* version 2 (Figma version 6): the smaller card sits a little left of the pad's old place (centre x 712.92) */
+    @media (min-width: 760px) { body.stack .calendar { left: calc(50% - 7.08px * var(--s)); } }
+
+    /* ---------- Version 2: the calendar look (Figma concepts in 5175-3935). Everything here shows only in version 2. ---------- */
+    .cal-grid, .cal-now, .cal-chip, .cal-toast, .thanks__invite { display: none; }
+    :root { --cal-wix: #0773fa; --cal-world: #f4511e; --now: #ea4335; }
+
+    /* concept 1 — the white above the panel is ruled like the hours of a day; the lines run up with the scroll
+       through the events and loop (--grid-y, set from JS) */
+    body.stack .cal-grid {
+      display: block; position: absolute; left: 0; right: 0; top: calc(48.7px * var(--s)); height: calc(221px * var(--s));
+      background: repeating-linear-gradient(to bottom, #ebebeb 0 1px, transparent 1px calc(44px * var(--s)));
+      background-position: 0 var(--grid-y, 0px);
+      pointer-events: none;
+    }
+    /* version 2 (Figma 5216-6778): each panel is the event's colour alone, and the title and its paragraph are set
+       bigger, centred as one block in the white above the panel (--tt / --dt: their tops in the frame, from JS) */
+    body.stack .cal-panel { background-color: var(--v2, var(--bg)) !important; }
+    body.stack .cal-panel img { display: none; }
+    body.stack .cal-panel img.cal-panel__v2 { display: block; }
+    .cal-panel__v2 { display: none; }
+    @media (min-width: 760px) {
+      body.stack .cal-title {
+        top: calc(var(--tt, 100.35) * 1px * var(--s));
+        font-size: calc(38px * var(--s)); line-height: calc(46px * var(--s)); letter-spacing: -0.01em;
+      }
+      body.stack .cal-desc { top: calc(var(--dt, 211.68) * 1px * var(--s)); line-height: calc(var(--dl, 22) * 1px * var(--s)); }
+    }
+    /* the red Now line, where the pile of past events meets the event on show, across the whole width */
+    body.stack .cal-now {
+      display: block; position: absolute; z-index: 2; left: 0; right: 0;
+      top: calc(312.43px * var(--s) - 7px); height: 14px; pointer-events: none; will-change: transform;
+    }
+    .cal-now::before { content: ""; position: absolute; left: 6px; right: 0; top: 6px; height: 2px; background: var(--now); }
+    .cal-now::after { content: ""; position: absolute; left: 0; top: 1px; width: 12px; height: 12px; border-radius: 50%; background: var(--now); }
+    /* each panel carries its event chip: the calendar it is in (Wix or Global) */
+    body.stack .cal-chip {
+      display: flex; align-items: center; gap: calc(8px * var(--s)); position: absolute; z-index: 1;
+      left: calc(24px * var(--s)); top: calc(23.57px * var(--s)); height: calc(36px * var(--s));
+      min-width: calc(81px * var(--s)); padding: 0 calc(16px * var(--s)) 0 calc(14px * var(--s));
+      border-radius: calc(10px * var(--s)); background: rgb(255 255 255 / 0.94);
+      font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 500; font-size: calc(15px * var(--s)); white-space: nowrap; color: var(--ink);
+    }
+    .cal-chip::before { content: ""; width: calc(12px * var(--s)); height: calc(12px * var(--s)); border-radius: calc(3px * var(--s)); background: var(--cal); }
+    /* the reminder for each event, bottom left: not in the updated design (Figma 5216-6778), so it stays hidden */
+    .cal-toast {
+      position: absolute; z-index: 3; left: 24px; bottom: 24px; width: 392px; padding: 14px 16px 14px 40px;
+      border-radius: 12px; background: var(--bg); box-shadow: 0 6px 24px rgb(0 0 0 / 0.16);
+      font-family: "Wix Madefor Text", system-ui, sans-serif;
+      opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+    .cal-toast.is-in { opacity: 1; transform: none; pointer-events: auto; }
+    .cal-toast__dot { position: absolute; left: 16px; top: 17px; width: 12px; height: 12px; border-radius: 50%; background: var(--c); }
+    .cal-toast p { margin: 0; }
+    .cal-toast__kicker { font-size: 12px; color: #5f6368; }
+    .cal-toast__title { margin-top: 4px !important; font-size: 15px; font-weight: 500; color: var(--ink); }
+    .cal-toast__actions { margin-top: 8px !important; display: flex; gap: 20px; }
+    .cal-toast button { appearance: none; border: 0; padding: 0; background: none; cursor: pointer; font: 500 13px "Wix Madefor Text", system-ui, sans-serif; color: #1a73e8; }
+
+    /* concept C — the pile reads like a month view: each block names its event and date, and once the oldest
+       have gone up under the header a chip counts them */
+    body.stack .cal-stack__item { border-radius: 0 calc(6px * var(--s)) calc(6px * var(--s)) 0; }
+    .cal-stack__label {
+      position: absolute; z-index: 1; left: calc(10px * var(--s)); right: 4px; top: 50%; transform: translateY(-50%);
+      font-family: "Wix Madefor Text", system-ui, sans-serif; color: #fff; white-space: nowrap; overflow: hidden;
+      opacity: var(--label-o, 0); pointer-events: none;
+    }
+    .cal-stack__item.is-light .cal-stack__label { color: #000; }
+    /* the panel's Wix / Global chip goes into the pile with its block: it shrinks with it from the block's top-left
+       corner (--chip-k: the block's width over the panel's) and fades as the block's own name comes up (set from JS) */
+    .cal-stack__item .cal-chip {
+      transform: scale(var(--chip-k, 1)); transform-origin: calc(-24px * var(--s)) calc(-23.57px * var(--s));
+      opacity: var(--chip-o, 1); pointer-events: none;
+    }
+    .cal-stack__label b { display: block; font-weight: 500; font-size: calc(11px * var(--s)); }
+    .cal-stack__label i { display: none; font-style: normal; opacity: 0.85; font-size: calc(11px * var(--s)); margin-top: calc(3px * var(--s)); }
+    .cal-stack__item.is-mid .cal-stack__label b { font-size: calc(13px * var(--s)); }
+    .cal-stack__item.is-mid .cal-stack__label i { display: block; }
+    .cal-stack__item.is-big .cal-stack__label { left: calc(16px * var(--s)); top: auto; bottom: calc(16px * var(--s)); transform: none; }
+    .cal-stack__item.is-big .cal-stack__label b { font-size: calc(15px * var(--s)); }
+    .cal-stack__item.is-big .cal-stack__label i { display: block; font-size: calc(12px * var(--s)); margin-top: calc(5px * var(--s)); }
+
+    /* the ending (Figma 5216-8583): on white, the thank-you title, its line and the two buttons in the middle, an arc of
+       the year's colours as small squares over them (on an ellipse round the title), the year's events as all-day bars
+       along the bottom and the closing line just above them. Each part comes in with the scroll (set from JS).
+       .thanks__invite and .thanks__ring are the 1440 × 1022 frame, scaled by --ts about the screen's centre. */
+    .thanks__ring { display: none; }
+    body.stack .thanks__text, body.stack .thanks__cta { display: none; }
+    body.stack .thanks__invite, body.stack .thanks__ring { display: block; }
+    .thanks__invite, .thanks__ring {
+      position: absolute; left: calc(50% - 720px * var(--ts)); top: calc(50% - 510px * var(--ts));
+      width: calc(1440px * var(--ts)); height: calc(1022px * var(--ts)); pointer-events: none;
+    }
+    .thanks__invite {
+      z-index: 20; will-change: transform;
+      font-family: "Wix Madefor Text", system-ui, sans-serif; color: var(--ink);
+    }
+    .thanks__ring { z-index: 19; }
+    .thanks__invite p { margin: 0; }
+    .invite__title {
+      position: absolute; left: 50%; top: calc(373.45px * var(--ts)); width: calc(584.76px * var(--ts)); transform: translateX(-50%);
+      font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif; font-weight: 500;
+      font-size: calc(34px * var(--ts)); line-height: normal; letter-spacing: -0.01em; text-transform: uppercase; text-align: center;
+    }
+    .invite__line {
+      position: absolute; left: 50%; top: calc(469.42px * var(--ts)); transform: translateX(-50%);
+      font-weight: 500; font-size: calc(21px * var(--ts)); line-height: calc(24px * var(--ts)); white-space: pre;
+    }
+    .invite__rsvp {
+      position: absolute; left: calc(50% - 143px * var(--ts)); top: calc(532.37px * var(--ts));
+      width: calc(286px * var(--ts)); height: calc(48px * var(--ts)); pointer-events: auto;
+    }
+    .invite__btn {
+      position: absolute; top: 0; appearance: none; border: 0; cursor: pointer; text-decoration: none;
+      display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
+      height: calc(48px * var(--ts)); padding: 0 calc(22px * var(--ts)); border-radius: calc(10px * var(--ts));
+      background: var(--chip); color: var(--ink); font: 500 calc(16px * var(--ts)) "Wix Madefor Text", system-ui, sans-serif; white-space: nowrap;
+    }
+    /* as in Figma 5240-10084: the yes button in the title's blue, the maybe one a shade darker grey than the header's chips */
+    .invite__btn--yes { left: calc(-0.25px * var(--ts)); background: #0773fa; color: #fff; }
+    .invite__btn:not(.invite__btn--yes) { left: calc(152.25px * var(--ts)); min-width: calc(134px * var(--ts)); background: #ebebeb; }
+    /* the squares: 20 × 20, rounded 5, each placed and turned by JS as it comes round the ellipse */
+    .ring__sq {
+      position: absolute; left: 0; top: 0; width: calc(20px * var(--ts)); height: calc(20px * var(--ts));
+      margin: calc(-10px * var(--ts)) 0 0 calc(-10px * var(--ts)); border-radius: calc(5px * var(--ts));
+      background: var(--c); will-change: transform, opacity;
+    }
+    /* the closing line: no card, just the two lines above the bars (their middle 15.77 left of the frame's), with a ♡
+       either side of them (21px, 6 below the text's top, their middles 183.03 left and 151.73 right of the frame's) */
+    body.stack .thanks__footer {
+      left: 0; width: 100%; height: auto; border-radius: 0; background: transparent; overflow: visible;
+    }
+    body.stack .thanks__footer::before, body.stack .thanks__footer::after { display: none; }
+    body.stack .thanks__footer-text {
+      position: relative; top: 0; left: calc(-15.77px * var(--ts)); font-size: calc(16px * var(--ts)); line-height: calc(18px * var(--ts));
+    }
+    .footer__heart { display: none; }
+    body.stack .footer__heart {
+      display: block; position: absolute; top: calc(6px * var(--ts)); transform: translateX(-50%);
+      font: 500 calc(21px * var(--ts)) / calc(24px * var(--ts)) "Wix Madefor Text", system-ui, sans-serif;
+    }
+    .footer__heart--l { left: calc(50% - 183.03px * var(--ts)); }
+    .footer__heart--r { left: calc(50% + 151.73px * var(--ts)); }
+    .footer__cal { display: none; }
+    .m-br { display: none; }
+    /* phones (Figma 5280-518, a 390 × 844 frame): the title, its line and the buttons placed from the screen's centre,
+       the closing line and the bars from its bottom edge, all scaled by --m (the screen against that frame, from JS) */
+    @media (max-width: 759px) {
+      .m-br { display: inline; }
+      .thanks__invite, .thanks__ring { left: 0; top: 0; width: 100%; height: 100%; }
+      .invite__title {
+        top: calc(50% - 123px * var(--m)); width: calc(290px * var(--m));
+        font-weight: 600; font-size: calc(24px * var(--m)); line-height: calc(26px * var(--m));
+      }
+      .invite__line { top: calc(50% - 33.6px * var(--m)); font-size: calc(18px * var(--m)); line-height: calc(24px * var(--m)); }
+      .invite__rsvp { left: calc(50% - 125.2px * var(--m)); top: calc(50% + 23.7px * var(--m)); width: calc(250.4px * var(--m)); height: calc(42px * var(--m)); }
+      .invite__btn { height: calc(40.7px * var(--m)); padding: 0 calc(19.23px * var(--m)); border-radius: calc(8.74px * var(--m)); font-size: calc(14px * var(--m)); }
+      .invite__btn--yes { left: 0; }
+      .invite__btn:not(.invite__btn--yes) { left: calc(133.3px * var(--m)); min-width: calc(117.1px * var(--m)); height: calc(42px * var(--m)); }
+      .ring__sq { width: calc(12px * var(--m)); height: calc(12px * var(--m)); margin: calc(-6px * var(--m)) 0 0 calc(-6px * var(--m)); border-radius: calc(3px * var(--m)); }
+      body.stack .thanks__footer-text {
+        left: 0; width: calc(256px * var(--m)); margin: 0 auto; padding: 0;
+        font-size: calc(14px * var(--m)); line-height: calc(16px * var(--m));
+      }
+      body.stack .footer__heart { top: calc(12px * var(--m)); font-size: calc(21.67px * var(--m)); line-height: calc(40px * var(--m)); }
+      .footer__heart--l { left: calc(50% - 148.5px * var(--m)); }
+      .footer__heart--r { left: calc(50% + 148px * var(--m)); }
+      /* the bars: 17 high, 3 apart, the date at the right end */
+      body.stack .thanks__stripe .thanks__bar {
+        top: calc(1.5px * var(--m)); height: calc(17px * var(--m)); padding: 0 13px; justify-content: space-between;
+        font-size: calc(10px * var(--m));
+      }
+    }
+
+    /* ---------- Thank you (Figma 5173-1813): after the last event, the text and its button on white, and the event
+       colours unfold as thin stripes from the bottom edge up. --ts scales the 1440×1022 frame (set from JS). ---------- */
+    .thanks { position: absolute; inset: 0; z-index: 3; overflow: hidden; background: var(--bg); --ts: 1; }
+    .thanks.is-folding { background: transparent; }
+    /* version 2: see-through, so the last event and the pile still show going up as the thank-you comes in */
+    body.stack .thanks { background: transparent; }
+    /* over the stripes the header loses its white band but keeps its grey chips, and the timeline's colour frames
+       scroll up out of the bar one after another (and come back down when the scroll goes back to the last event) */
+    body.on-thanks .header, body.panels.has-bg.on-thanks .header, body.framed.has-bg.on-thanks .header { background: transparent; }
+    body.on-thanks .header__brand, body.on-thanks .header__link,
+    body.panels.has-bg.on-thanks .header__brand, body.panels.has-bg.on-thanks .header__link,
+    body.framed.has-bg.on-thanks .header__brand, body.framed.has-bg.on-thanks .header__link { background: var(--chip); }
+    .header__seg { transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1); transition-delay: calc(var(--i) * 45ms); }
+    body.on-thanks .header__seg { transform: translateY(-34px); }
+    @media (prefers-reduced-motion: reduce) { .header__seg { transition: none; } }
+    .thanks__stripe { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
+    /* version 2: the stripes are the year's events as all-day bars in a calendar, top to bottom in date order —
+       rounded, with the darker edge of a calendar event on the left, the event's name and date, and "All day" at the
+       end. Each stripe keeps white round its bar, so the bars sit apart while they unfold. */
+    .thanks__bar { display: none; }
+    body.stack .thanks__stripe { background: var(--bg) !important; }
+    body.stack .thanks__bar {
+      /* (Figma 5277-518: 18 high, 4 apart, the name at the left and the date at the right end, 12px) */
+      display: flex; align-items: center; justify-content: space-between; gap: calc(6px * var(--ts));
+      position: absolute; left: 8px; right: 8px; top: calc(2px * var(--ts));
+      height: calc(18px * var(--ts)); padding: 0 13px; border-radius: 6px;
+      background: var(--c); color: #fff; box-shadow: inset 4px 0 0 rgb(0 0 0 / 0.2);
+      font: 500 max(9px, calc(12px * var(--ts))) / 1 "Wix Madefor Text", system-ui, sans-serif; white-space: pre; overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.35s ease;
+    }
+    body.stack .thanks__bar.is-light { color: #000; box-shadow: inset 4px 0 0 rgb(0 0 0 / 0.12); }
+    .thanks__bar .bar__when { font-weight: 400; opacity: 0.8; }
+    /* (on the light bars the date is full black, as in Figma 5277-518) */
+    .thanks__bar.is-light .bar__when { opacity: 1; }
+    .thanks__bar .bar__when::before { content: "·  "; }
+    body.stack .thanks__stripe:hover .thanks__bar { transform: translateX(6px); filter: brightness(1.05); }
+    /* its centre 70.36 above the frame's */
+    .thanks__text {
+      position: absolute; left: 50%; top: calc(50% - 70.36px * var(--ts)); margin: 0;
+      width: calc(934.66px * var(--ts));
+      transform: translate(-50%, -50%);
+      font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif;
+      font-weight: 500; font-size: calc(47.971px * var(--ts)); line-height: 1.05; letter-spacing: -0.01em;
+      text-transform: uppercase; text-align: center;
+    }
+    /* under the text, grey; its centre 76.89 below the frame's and 5 right of it */
+    .thanks__cta {
+      position: absolute; z-index: 20; left: calc(50% + 5px * var(--ts)); top: calc(50% + 76.89px * var(--ts));
+      width: calc(226.38px * var(--ts)); height: calc(44.94px * var(--ts));
+      transform: translate(-50%, -50%);
+      display: flex; align-items: center; justify-content: center;
+      border-radius: calc(10px * var(--ts)); background: var(--chip); color: var(--ink);
+      font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 500;
+      font-size: calc(21px * var(--ts)); line-height: calc(22px * var(--ts)); text-decoration: none;
+    }
+    /* the white footer (Figma 5173-1813): once the stripes are out it scrolls up over them and stops with
+       its top 108.47 above the bottom of the frame (the rest runs on below the screen). Ruled down both sides with ticks;
+       rides on --footer-y (set from JS). */
+    .thanks__footer {
+      position: absolute; z-index: 15; top: 0; left: calc(50% - 528px * var(--ts));
+      width: calc(1008.26px * var(--ts)); height: calc(170.21px * var(--ts));
+      border-radius: calc(10px * var(--ts)); background: var(--bg); overflow: hidden;
+      transform: translateY(var(--footer-y, 100vh)); will-change: transform;
+    }
+    /* 1px ticks, 12.45 wide, every 11.01 from 12.41 down; 5.68 in from the left, and as far in from the right */
+    .thanks__footer::before, .thanks__footer::after {
+      content: ""; position: absolute; top: calc(12.41px * var(--ts)); bottom: 0; width: calc(12.45px * var(--ts));
+      background: repeating-linear-gradient(to bottom, var(--ink) 0 1px, transparent 1px calc(11.01px * var(--ts)));
+    }
+    .thanks__footer::before { left: calc(5.68px * var(--ts)); }
+    .thanks__footer::after { right: calc(5.67px * var(--ts)); }
+    .thanks__footer-text {
+      /* centred in the part of the card that shows (Figma 5173-1813) */
+      position: absolute; left: 0; right: 0; top: calc(34.51px * var(--ts)); margin: 0;
+      font-family: "Wix Madefor Text", system-ui, sans-serif; font-weight: 500;
+      font-size: calc(21px * var(--ts)); line-height: calc(22px * var(--ts)); text-align: center;
+    }
+    @media (max-width: 759px) {
+      .thanks__footer { left: 16px; width: calc(100% - 32px); }
+      .thanks__footer-text { font-size: 15px; line-height: 18px; padding: 0 28px; }
+      .thanks__text { width: calc(100% - 32px); font-size: 24px; text-wrap: balance; }
+      .thanks__text .soft { display: none; }
+    }
+
+    /* nothing follows the thank-you: the page ends with the footer in place (the anchor stays for the header link) */
+    .after { height: 0; }
+
+    @media (max-width: 759px) {
+      .opening__note { top: calc(50% + 171.3px * var(--m)); width: calc(360px * var(--m)); font-size: calc(18px * var(--m)); line-height: calc(24px * var(--m)); }
+      /* center the pad together with the fanned pages on its left */
+      .calendar { left: calc(50% + 36px); top: 50%; }
+      .cal-title { top: 64px; font-size: min(7.2vw, 34px); }
+      .cal-desc { bottom: 64px; width: calc(100% - 48px); font-size: 14px; line-height: 16px; }
+      .cal-month, .cal-year { bottom: 36px; font-size: 13px; line-height: 16px; }
+      .cal-month { left: 24px; }
+      .cal-year { right: 16px; }
+      /* version 1: title, then its description, then the panel with the pad in its middle */
+      body.panels .cal-title { top: 64px; }
+      body.panels .cal-desc { top: 148px; bottom: auto; width: calc(100% - 48px); white-space: normal; text-wrap: balance; }
+      body.panels .cal-desc br { display: none; }
+      body.panels .cal-panels { top: 236px; }
+      body.panels .calendar { top: calc(50% + 118px); }
+      body.panels .cal-panel img { left: 0; top: 0; width: 100%; height: 100%; transform: none; }
+      /* version 2: the hour lines stop and the Now line sits at the panel's top edge (236); no pile, so it starts at the edge */
+      body.stack .cal-grid { height: calc(236px - 48.7px * var(--s)); }
+      body.stack .cal-now { left: 0; top: calc(236px - 7px); }
+      /* version 2 on phones (Figma 5303-235): the title and its paragraph as one block centred in the white (tops from
+         JS), the line breaks as set there */
+      body.stack .cal-title {
+        top: var(--mtt, 83px); font-weight: 600; font-size: 24px; line-height: var(--mtl, 28px); letter-spacing: -0.01em;
+      }
+      body.stack .cal-desc {
+        top: var(--mdt, 153px); width: calc(100% - 32px); font-size: 15px; line-height: 19px; text-wrap: wrap;
+      }
+      body.stack .cal-desc br { display: inline; }
+      /* the panel shows its phone picture (390 × 608 from its top edge), whole, sitting on the screen's bottom edge,
+         over the panel's colour as set there */
+      body.stack .cal-panel { background-color: var(--v2m, var(--v2, var(--bg))) !important; }
+      body.stack .cal-panel img.cal-panel__v2 { display: none; }
+      body.stack .cal-panel img.cal-panel__m {
+        display: block; left: 0; top: 0; width: 100%; height: 100%; transform: none;
+        object-fit: contain; object-position: 50% 100%;
+      }
+      /* the chip, smaller (54 × 26, its square 9) */
+      body.stack .cal-chip {
+        left: 16px; top: 26px; height: 26px; min-width: 0; gap: 5.4px; padding: 0 8px 0 8.3px; border-radius: 5px; font-size: 12px;
+      }
+      body.stack .cal-chip::before { width: 9px; height: 9px; border-radius: 3px; }
+      /* the card, centred, low in the panel (its middle --cal-cy above the bottom edge, from JS) */
+      body.panels.stack .calendar { left: 50%; top: calc(100% - var(--cal-cy, 112px)); }
+    }
+    .cal-panel__m { display: none; }
+  </style>
+</head>
+<body data-version="new" data-hero="none">
+  <main>
+    <section class="intro" id="intro">
+      <div class="intro__stage" id="stage">
+        <div class="opening" id="opening">
+          <div class="hero-block" aria-hidden="true"></div>
+          <div class="hero-block" aria-hidden="true"></div>
+          <div class="hero-block" aria-hidden="true"></div>
+          <div class="hero-block" aria-hidden="true"></div>
+          <div class="hero-dots" id="heroDotsBack" aria-hidden="true"></div>
+          <img class="opening__year opening__year--v2" src="assets/opening-2017-black.svg" alt="" aria-hidden="true" />
+          <img class="opening__year opening__year--v1" src="assets/opening-2017-blue.svg" alt="" aria-hidden="true" />
+          <p class="opening__so" aria-hidden="true">So</p>
+          <h1 class="opening__title" aria-label="So what happened in 2017?"><span class="opening__what">What</span><br /><span class="opening__happened">happened</span></h1>
+          <p class="opening__in" aria-hidden="true">in</p>
+          <p class="opening__q" aria-hidden="true">?</p>
+          <p class="opening__note">We can't believe! it’s been a <br />DECADE since you joined Wix <br />What a journey it’s been!</p>
+          <div class="hero-block" aria-hidden="true"></div>
+          <div class="hero-dots" id="heroDotsFront" aria-hidden="true"></div>
+        </div>
+        <div class="thanks" id="thanks" hidden>
+          <p class="thanks__text" id="thanksText">It’s amazing to see how far we’ve <br class="soft" />come in 10 years -&nbsp; and we couldn’t <br class="soft" />have done it without you&nbsp;♡</p>
+          <a class="thanks__cta" id="thanksCta" href="#gift">Choose a Gift</a>
+          <div class="thanks__ring" id="thanksRing" aria-hidden="true"></div>
+          <div class="thanks__invite" id="thanksInvite">
+            <p class="invite__title">It’s amazing to<br class="m-br" /> see how far we’ve<br class="m-br" /> come in 10 years!</p>
+            <p class="invite__line">we couldn’t have done it without you</p>
+            <div class="invite__rsvp">
+              <a class="invite__btn invite__btn--yes" href="#gift">choose a gift</a>
+              <button class="invite__btn" type="button" id="inviteMaybe">Maybe later</button>
+            </div>
+          </div>
+          <footer class="thanks__footer" id="thanksFooter" hidden>
+            <p class="thanks__footer-text">Thanks for an incredible decade<br />We’re excited for what’s yet to come</p>
+            <span class="footer__heart footer__heart--l" aria-hidden="true">♡</span><span class="footer__heart footer__heart--r" aria-hidden="true">♡</span>
+            <span class="footer__cal" aria-hidden="true"><span class="footer__swatch"></span><img src="assets/logo-wix.svg" alt="" /></span>
+          </footer>
+        </div>
+        <div class="cal-layer" id="calLayer" hidden>
+          <div class="cal-grid" aria-hidden="true"></div>
+          <div class="cal-allday" id="calAllday" aria-hidden="true"><span>New year 2017</span><span class="cal-allday__when">·  Jan 01</span></div>
+          <div class="cal-panels" id="calPanels" aria-hidden="true"></div>
+          <div class="cal-now" id="calNow" aria-hidden="true"></div>
+          <div class="cal-stack" id="calStack" aria-hidden="true"></div>
+          <div class="cal-toast" id="calToast" role="status">
+            <span class="cal-toast__dot"></span>
+            <p class="cal-toast__kicker">Reminder&nbsp; ·&nbsp; 10 years ago today</p>
+            <p class="cal-toast__title" id="toastTitle"></p>
+            <p class="cal-toast__actions"><button type="button" id="toastSnooze">Snooze</button><button type="button" id="toastDismiss">Dismiss</button></p>
+          </div>
+          <div class="cal-frame" aria-hidden="true">
+            <div class="cal-bg" id="calBg"></div>
+            <div class="cal-art" id="calArt"></div>
+          </div>
+          <h2 class="cal-title" id="calTitle"></h2>
+          <div class="calendar" id="calendar">
+            <svg class="calendar__svg" id="pad" width="338" height="323" aria-hidden="true"></svg>
+          </div>
+          <p class="cal-desc" id="calDesc"></p>
+          <p class="cal-month" id="calMonth"></p>
+          <p class="cal-year">2017</p>
+        </div>
+      </div>
+    </section>
+    <section class="after" id="timeline"></section>
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    // "new" version: the calendar whose pages flip like a spiral notebook.
+    // Every event gets a full page, so turning a page shows the next event in the year
+    // (`wix` marks Wix's own events, apart from the rest of the world's).
+    // `bg` is the event's background art with its box in the 1440×1022 Figma frame;
+    // `color` fills the background until (and under) the art; without either it is white.
+    // `art` are cut-outs that scroll in from the bottom as the event's page turns in.
+    // `lines` puts the ruled lines behind the event, their top at that y in the Figma frame.
+    // `panel` is for version 1: the colour of the panel under the texts and its picture (`img`; its box in the
+    // frame, or the panel itself when left out); `wideTitle` / `lead` are the title and description as set there.
+    // `framed` is for version 2: its own art box (`bg`, same frame coordinates) and the header chips' colour
+    // (`chip`; the event's `color` when left out).
+    const PAGES = [
+      { day: "31", month: "January", wix: true, color: "#bfe3f5", bg: { src: "assets/bg/jan-31.jpg", x: -281.59, y: -67.54, w: 1936.953, h: 1089.536 },
+        framed: { chip: "#b0dbf4", bg: { src: "assets/bg/jan-31-framed.jpg", x: -88.16, y: 19.1, w: 1788.33, h: 998.05 } }, title: "We shared our Super\nBowl ad with Gal Gadot\n& Jason Statham", body: "Gal Gadot & Jason Statham destroyed an entire restaurant in one of the biggest ads we've ever made",
+        panel: { color: "#569eff", img: { src: "assets/panel/jan-31.jpg" } }, wideTitle: "We shared our Super Bowl ad with\nGal Gadot & Jason Statham", lead: "Gal Gadot & Jason Statham destroyed an entire\nrestaurant in one of the biggest ads we've ever made" },
+      { day: "23", month: "February", wix: true, color: "#c9efd5", bg: { src: "assets/bg/feb-23.jpg", x: -144.96, y: -22.36, w: 1816.87, h: 1120.43 },
+        framed: { chip: "#f7f2ee", bg: { src: "assets/bg/feb-23.jpg", x: -95.55, y: -44.11, w: 1816.87, h: 1120.43 } }, title: "We acquired\nDeviantArt", body: "The world's largest online art community joined us with their 40 million members",
+        panel: { color: "#f4511e", img: { src: "assets/panel/feb-23.jpg" } }, lead: "The world's largest online art community\njoined us with their 40 million members" },
+      { day: "03", month: "March", wix: false, art: [
+        // x/y: centre from the frame's centre; w/h: the picture's box; box: height of its rotated bounds
+        { src: "assets/bg/mar-03-switch.png", x: -806.08, y: -89.37, w: 1368.5, h: 616.311, box: 809.023, rot: -8.37, crop: 1.249 },
+        { src: "assets/bg/mar-03-switch.png", x: 805.55, y: 168.05, w: 1368.5, h: 616.311, box: 1044.806, rot: 19.87, crop: 1.249 },
+        { src: "assets/bg/mar-03-switch.png", x: -240.87, y: 386.93, w: 746.456, h: 336.17, box: 517.912, rot: 15, crop: 1.249 },
+        { src: "assets/bg/mar-03-switch.png", x: 65.82, y: -90.23, w: 746.456, h: 336.17, box: 765.532, rot: -45, crop: 1.249 },
+      ], title: "Nintendo released\nthe Switch", body: "Half console, half handheld, and suddenly everyone on the bus was playing Zelda",
+        panel: { color: "#63cc9b", img: { src: "assets/panel/mar-03.jpg" } }, lead: "Half console, half handheld, and suddenly\neveryone on the bus was playing Zelda" },
+      { day: "17", month: "May", wix: true, color: "#d5e1ff", title: "We launched\nSEO Wizard", body: "A step-by-step plan that helped our users get found on Google",
+        panel: { color: "#b39ddb", img: { src: "assets/panel/may-17.jpg" } }, lead: "A step-by-step plan that helped our\nusers get found on Google" },
+      { day: "22", month: "June", wix: true, color: "#ffd6e8", title: "Karlie Kloss built\na website with Wix", body: "The supermodel and entrepreneur made her own site and shot a commercial",
+        panel: { color: "#ffc2fe", img: { src: "assets/panel/jun-22.jpg" } }, lead: "The supermodel and entrepreneur made\nher own site and shot a commercial" },
+      { day: "12", month: "August", wix: false, color: "#ffd8a8", title: "Usain Bolt ran\nhis last race", body: "The fastest man in the world pulled up injured in the relay final in London – not the ending anyone wanted",
+        panel: { color: "#7a5a4c", img: { src: "assets/panel/aug-12.jpg" } }, lead: "The fastest man in the world pulled up injured\nin the relay final in London – not the\nending anyone wanted" },
+      { day: "27", month: "November", wix: false, color: "#f3e4cf", title: "Harry & Meghan\nannounced their\nengagement", body: "The whole world immediately started planning the wedding",
+        panel: { color: "#e8b77a", img: { src: "assets/panel/nov-27.jpg" } }, wideTitle: "Harry & Meghan announced\ntheir engagement", lead: "The whole world immediately started\nplanning the wedding" },
+      { day: "05", month: "December", wix: true, color: "#cfe6ff", title: "We introduced\nWix Code", body: "It let anyone add custom code, databases and dynamic pages to a Wix site, opening the platform to developers",
+        panel: { color: "#ffdc7a", img: { src: "assets/panel/dec-05.jpg" } }, lead: "It let anyone add custom code, databases and\ndynamic pages to a Wix site, opening the\nplatform to developers" },
+    ];
+    // version 2 (Figma 5216-6778): each event's panel is its colour alone; the pad's page has a band of that colour
+    // at the top with the month in it (ink) and the day under it (top: the day's top on the page, track: its tracking);
+    // title: where version 2 breaks the title differently
+    const V2 = [
+      { color: "#0575fb", ink: "#ffffff", img: "assets/panel-v2/jan-31.jpg", track: -2, title: "We shared our Super Bowl ad\nwith Gal Gadot & Jason Statham" },
+      { color: "#f4511e", ink: "#ffffff", img: "assets/panel-v2/feb-23.jpg", track: -2 },
+      { color: "#54c88b", ink: "#ffffff", img: "assets/panel-v2/mar-03.jpg", track: -5 },
+      { color: "#d6d0fd", ink: "#000000", img: "assets/panel-v2/may-17.jpg", track: -5 }, // the purple of its picture (Figma 5240-9751), so black text
+      { color: "#fbcbfd", ink: "#000000", img: "assets/panel-v2/jun-22.jpg", track: -3 },
+      { color: "#77574a", ink: "#ffffff", img: "assets/panel-v2/aug-12.jpg", track: -5, title: "Usain Bolt ran his\nlast race",
+        body: "The fastest man in the world pulled up injured in the relay\nfinal in London – not the ending anyone wanted" },
+      { color: "#58dce8", ink: "#000000", img: "assets/panel-v2/nov-27.jpg", track: -3 },
+      { color: "#ffca4e", ink: "#000000", img: "assets/panel-v2/dec-05.jpg", track: -3,
+        body: "It let anyone add custom code, databases and dynamic\npages to a Wix site, opening the platform to developers" },
+    ];
+    // version 2's day (Figma version 6, 5240-9574): every page has it the same size (152px on the 230.68px card,
+    // i.e. 222.71 on the pad's 338) with its top 42.58 down the page; `track` is its tracking in % of that size
+    const V2_NUM = { size: 222.71, top: 42.58 };
+    // and the card itself is 230.68 × 220.44 there (the pad drawn at 338 × 323, scaled), centred at x 712.92
+    const V2_CARD = 230.68 / 338;
+    V2.forEach(v => { v.top = V2_NUM.top; v.track = +(v.track * V2_NUM.size / 100).toFixed(3); });
+    // phones (Figma 5303-235, 390 × 844 frames): each event's title and paragraph as set there, and its panel picture
+    // made there (390 × 608 from the panel's top edge, with the panel's own colour round it; assets/panel-m)
+    const V2_PHONE = [
+      { bg: "#0575fb", title: "We shared our Super\nBowl ad with Gal\nGadot & Jason Statham", body: "Gal Gadot & Jason Statham destroyed an\nentire restaurant in one of the\nbiggest ads we've ever made" },
+      { bg: "#fa4d04", title: "We acquired\nDeviantArt", body: "The world's largest online art community\njoined us with their 40 million members" },
+      { bg: "#54c88b", title: "Nintendo released\nthe Switch", body: "Half console, half handheld, and suddenly\neveryone on the bus was playing Zelda" },
+      { bg: "#d6d0fd", title: "We launched\nSEO Wizard", body: "A step-by-step plan that helped\nour users get found on Google" },
+      { bg: "#fbcbfd", title: "Karlie Kloss built\na website with Wix", body: "The supermodel and entrepreneur made\nher own site and shot a commercial" },
+      { bg: "#77574a", title: "Usain Bolt ran\nhis last race", body: "The fastest man in the world pulled up injured\nin the relay final in London –\nnot the ending anyone wanted" },
+      { bg: "#58dce8", title: "Harry & Meghan\nannounced their\nengagement", body: "The whole world immediately started\nplanning the wedding", line: 26 },
+      { bg: "#fece11", title: "We introduced\nWix Code", body: "It let anyone add custom code, databases\nand dynamic pages to a Wix site,\nopening the platform to developers" },
+    ];
+    V2.forEach((v, i) => { v.phone = { ...V2_PHONE[i], img: v.img.replace("panel-v2/", "panel-m/") }; });
+    const isPhone = () => innerWidth < 760;
+    // the date card on phones: its front page's width, and its middle's height above the screen's bottom edge
+    const PHONE_CARD = { w: 142, cy: 112 };
+    let wasNarrow = null;
+    PAGES.forEach((page, i) => { page.v2 = V2[i]; });
+
+    // an event's date
+    const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const dateOf = page => new Date(2017, MONTHS.indexOf(page.month), +page.day);
+
+    const stage = document.getElementById("stage");
+    const calendar = document.getElementById("calendar");
+    const pad = document.getElementById("pad");
+    const intro = document.getElementById("intro");
+    const opening = document.getElementById("opening");
+    const calLayer = document.getElementById("calLayer");
+
+    // The opening stays put for the first OPEN viewports of scroll. For the first HERO_HOLD of them only the hero's
+    // squares move (rising from under it); then the first event (Jan 31) scrolls up over it in the last viewport, and
+    // once that is in place its pages start turning.
+    const HERO_HOLD = 0.6;
+    const OPEN = HERO_HOLD + 1;
+    // how far the first event has come up over the opening (0 → 1 over the viewport after the hold)
+    const enterOf = y => clamp((y - intro.offsetTop - HERO_HOLD * innerHeight) / innerHeight, 0, 1);
+    // the header's "2017's timeline" goes to the first event (Jan 31), just in place over the opening
+    // (a pixel on, so it lands fully in place whatever the rounding)
+    Site.timelineTarget = () => Math.ceil(intro.offsetTop + OPEN * innerHeight) + 1;
+    // After the last event: OUTRO viewports in which the pad scrolls away and the texts roll out.
+    const OUTRO = 1;
+    // Then THANKS viewports for the thank-you, held in place (its stripes unfold on their own once it shows);
+    // the footer finishes rising at the very end of it, which is the end of the page.
+    const THANKS = 0.85;
+    // The thank-you starts this many viewports before the outro ends: while the last event is still going into the
+    // pile, so its card is already coming up as the panel empties (no stretch of empty white between them)
+    const THANKS_LEAD = 0.6;
+
+    // ---- page geometry (px, in the front page's box; stroke is centred on the path) ----
+    // Every page hangs from the top edge of the front page.
+    const HINGE_Y = 0.5;
+    const BIG = { l: 0.5, r: 337.5, h: 322, num: { x: 169, y: 250, size: 246.675, track: 0 } };
+    // version 1 (Figma 5147-7532): the day sits higher (baseline 232) to make room for the month under it
+    const PAGE_NUM_Y = { panels: 232, framed: BIG.num.y };
+    const PAGE_MONTH = { x: 169, y: 280.2, size: 31 };
+    // version 2 (Figma 5216-6778): the band runs to y 57.8 of the page; the month's baseline in it; the day's
+    // baseline sits 249 under its top (Wix Madefor Text at 246.675px)
+    const PAGE_BAND = { x: 169.5, y: 39.7, bottom: 58.3, numBase: 249 };
+    let numY = BIG.num.y; // set with the version (setLayout)
+    const RADIUS = 44.5;       // corner radius, constant at every angle
+    const LEAN = 0.2;          // how far right a page leans while it swings up over the hinge
+    const BLANKS = 2;          // empty pages at the back, so the pad always shows two pages behind
+
+    // Resting slots behind the front page, taken from the Figma frame:
+    // the bottom edge of each page as an offset (dx, dy) from the hinge's left end.
+    const SLOTS = [
+      [0, BIG.h],           // 0 — front
+      [-54.7, 266.4],       // 1 — first page behind
+      [-144.1, 176.4],      // 2 — second page behind
+    ];
+    // a third slot further around the circle, where new pages appear from
+    SLOTS.push(polarToVec(vecToPolar(SLOTS[2]).a + 23 * Math.PI / 180, vecToPolar(SLOTS[2]).r - 24));
+
+    // where a turned page comes to rest: the last page behind the pad (it lands exactly on it and becomes it)
+    const BACK = vecToPolar(SLOTS[SLOTS.length - 2]);
+    const OVER = 0.55;         // part of a turn spent flipping over the hinge; the rest swings round to the back
+
+    function vecToPolar([x, y]) { return { a: Math.atan2(-x, y), r: Math.hypot(x, y) }; }
+    function polarToVec(a, r) { return [-Math.sin(a) * r, Math.cos(a) * r]; }
+
+    /**
+     * Where a page's bottom edge sits for a slot position s:
+     *   s > 0  waiting behind (s = 1, 2 … are the resting slots)
+     *   s = 0  facing us
+     *   s < 0  turning away: it flips up over the hinge, then swings round the left side
+     *          and lands on the last page behind the pad, merging with it (s = -1)
+     * Returns the bottom-edge offset, the page opacity, whether its front faces us
+     * and whether it has gone round behind the pad.
+     */
+    function pose(s, h) {
+      if (s >= 0) {
+        // move around the circle between the resting slots (angle and length interpolated)
+        const i = Math.min(Math.floor(s), SLOTS.length - 2);
+        const t = s - i;
+        const p0 = vecToPolar(SLOTS[i]), p1 = vecToPolar(SLOTS[i + 1]);
+        const d = polarToVec(lerp(p0.a, p1.a, t), lerp(p0.r, p1.r, t) * h / BIG.h);
+        const opacity = 1 - smoothstep(SLOTS.length - 1.6, SLOTS.length - 1, s);
+        return { d, opacity, facing: true };
+      }
+      const u = clamp(-s, 0, 1);
+      if (u <= OVER) {
+        const angle = u / OVER * Math.PI; // 0 → 180°: standing straight up above the hinge
+        return { d: [LEAN * h * Math.sin(angle), h * Math.cos(angle)], opacity: 1, facing: angle < Math.PI / 2, behind: false };
+      }
+      // round the left side, from straight up down onto the last page behind; it stays solid all the way and ends
+      // exactly on that page (which has just come up into that slot), so it merges into it rather than fading away
+      const v = (u - OVER) / (1 - OVER);
+      const a = lerp(Math.PI, BACK.a, v), r = lerp(BIG.h, BACK.r, v) * h / BIG.h;
+      return { d: polarToVec(a, r), opacity: 1, facing: false, behind: true };
+    }
+
+    // Rounded quad with true circular corners of a fixed radius (shrunk only when an edge gets too short).
+    function roundedQuad(pts, r) {
+      const n = pts.length;
+      const corners = pts.map((p, i) => {
+        const a = pts[(i + n - 1) % n], b = pts[(i + 1) % n];
+        const v1 = [a[0] - p[0], a[1] - p[1]], v2 = [b[0] - p[0], b[1] - p[1]];
+        const l1 = Math.hypot(...v1), l2 = Math.hypot(...v2);
+        if (l1 < 1e-3 || l2 < 1e-3) return { A: p, B: p, r: 0, sweep: 0 };
+        const u1 = [v1[0] / l1, v1[1] / l1], u2 = [v2[0] / l2, v2[1] / l2];
+        const ang = Math.acos(clamp(u1[0] * u2[0] + u1[1] * u2[1], -1, 1));
+        const half = Math.tan(ang / 2);
+        if (ang < 1e-3 || Math.PI - ang < 1e-3) return { A: p, B: p, r: 0, sweep: 0 };
+        let t = r / half, rr = r;
+        const tMax = Math.min(l1, l2) / 2;
+        if (t > tMax) { t = tMax; rr = t * half; }
+        const cross = (-v1[0]) * v2[1] - (-v1[1]) * v2[0];
+        return {
+          A: [p[0] + u1[0] * t, p[1] + u1[1] * t],
+          B: [p[0] + u2[0] * t, p[1] + u2[1] * t],
+          r: rr, sweep: cross > 0 ? 1 : 0,
+        };
+      });
+      const f = n => n.toFixed(2);
+      let d = `M${f(corners[0].A[0])} ${f(corners[0].A[1])}`;
+      corners.forEach((c, i) => {
+        if (i > 0) d += `L${f(c.A[0])} ${f(c.A[1])}`;
+        d += c.r > 0 ? `A${f(c.r)} ${f(c.r)} 0 0 ${c.sweep} ${f(c.B[0])} ${f(c.B[1])}` : `L${f(c.B[0])} ${f(c.B[1])}`;
+      });
+      return d + "Z";
+    }
+
+    // ---- build pages ----
+    const el = (tag, attrs = {}) => {
+      const n = document.createElementNS(SVG_NS, tag);
+      for (const k in attrs) n.setAttribute(k, attrs[k]);
+      return n;
+    };
+    const defs = el("defs");
+    pad.appendChild(defs);
+
+    // One leaf per event, in the order they turn (e); each takes the next slot in the pad.
+    const leaves = PAGES.map((p, e) => ({ e, p }));
+    for (let i = 0; i < BLANKS; i++) leaves.push({ e: PAGES.length + i, p: null });
+
+    leaves.forEach((leaf, i) => {
+      const geo = BIG;
+      leaf.geo = geo;
+      const clipShape = el("path");
+      const clip = el("clipPath", { id: `page-clip-${i}` });
+      clip.appendChild(clipShape);
+      defs.appendChild(clip);
+
+      const g = el("g", { class: "page" });
+      const shape = el("path", { class: "page__shape", "vector-effect": "non-scaling-stroke" });
+      // the clip lives on an untransformed wrapper so it stays in page-pad coordinates
+      const numClip = el("g", { "clip-path": `url(#page-clip-${i})` });
+      const num = el("text", {
+        class: "page__num", x: geo.num.x, y: geo.num.y, "text-anchor": "middle",
+        "font-size": geo.num.size, "letter-spacing": geo.num.track,
+      });
+      num.textContent = leaf.p ? leaf.p.day : "";
+      // version 1 prints the month under the day
+      const month = el("text", {
+        class: "page__month", x: PAGE_MONTH.x, y: PAGE_MONTH.y, "text-anchor": "middle", "font-size": PAGE_MONTH.size,
+      });
+      month.textContent = leaf.p ? leaf.p.month : "";
+      // version 2 puts the month in a band of the event's colour across the top of the page
+      const band = el("rect", { class: "page__band", x: -40, y: -30, width: 420, height: PAGE_BAND.bottom + 30, fill: leaf.p ? leaf.p.v2.color : "none" });
+      const tab = el("text", {
+        class: "page__tab", x: PAGE_BAND.x, y: PAGE_BAND.y, "text-anchor": "middle", "font-size": PAGE_MONTH.size,
+        fill: leaf.p ? leaf.p.v2.ink : "none",
+      });
+      tab.textContent = leaf.p ? leaf.p.month : "";
+      numClip.append(band, tab, num, month);
+      g.append(shape, numClip);
+      Object.assign(leaf, { g, shape, clipShape, num, month, band, tab, numY: BIG.num.y });
+    });
+
+    // paint order: the page that turns first sits on top; pages that have gone round to the back sit below all
+    const backLayer = el("g"), frontLayer = el("g");
+    pad.append(backLayer, frontLayer);
+    function restack() {
+      for (let i = leaves.length - 1; i >= 0; i--) (leaves[i].behind ? backLayer : frontLayer).appendChild(leaves[i].g);
+    }
+    restack();
+
+    const turns = PAGES.length - 1; // the last page stays
+
+    function layout() {
+      const flip = innerHeight; // scroll distance per page turn
+      intro.style.height = `${innerHeight * (1 + OPEN + OUTRO + THANKS - THANKS_LEAD) + turns * flip}px`;
+      const narrow = innerWidth < 760;
+      // the opening's 2017 spans the frame; on phones it fills the width instead
+      const o = narrow ? (innerWidth - 16) / 1335 : Math.min(1, innerWidth / 1440, innerHeight / 1022);
+      opening.style.setProperty("--o", o.toFixed(4));
+      // the row of words runs from x −183 to +200 of the frame's centre; on phones it fills the width less
+      // a margin and is centred, so "in" doesn't fall off the right edge
+      const p = narrow ? Math.min(1, (innerWidth - 32) / 580) : o;
+      opening.style.setProperty("--p", p.toFixed(4));
+      opening.style.setProperty("--dx", narrow ? `${(-8.5 * p).toFixed(1)}px` : "0px");
+      // phones lay out by the 390 × 844 phone frame (Figma 5303-235), scaled to the screen
+      const m = heroPhoneScale();
+      opening.style.setProperty("--m", m.toFixed(4));
+      stage.style.setProperty("--m", m.toFixed(4));
+      const s = narrow ? 1 : Math.min(1, innerWidth / 1440, innerHeight / 1022);
+      stage.style.setProperty("--s", s.toFixed(4));
+      stageScale = s;
+      // the thank-you's stripes leave room for its text on phones
+      thanksScale = narrow ? innerHeight / 1022 * 0.8 : s;
+      thanksEl.style.setProperty("--ts", thanksScale.toFixed(4));
+      thanksAt = null;
+      footerAt = null;
+      // an event's lines stay put
+      lineEls.forEach(el => el && fillLines(el, s, 0));
+      lastRendered = null; // the floating art's travel depends on the screen size
+      // keep the pad (incl. the pages fanned out on the left) inside small screens
+      const cal = narrow ? Math.min(1, (innerWidth - 32) / 450, (innerHeight - 320) / 360) : s;
+      // version 2 on phones (Figma 5303-235): the card 142 wide, centred, its middle 112 above the bottom edge, scaled
+      // with the panel (390 × 608 in the frame)
+      const pk = Math.min(innerWidth / 390, (innerHeight - 236) / 608, 1.15);
+      const phoneCard = stacked && narrow;
+      calendar.style.setProperty("--cal-scale", ((phoneCard ? PHONE_CARD.w / 230.68 * pk : Math.max(0.45, cal)) * V2_CARD).toFixed(4));
+      stage.style.setProperty("--cal-cy", `${(PHONE_CARD.cy * pk).toFixed(1)}px`);
+      stage.style.setProperty("--pk", pk.toFixed(4));
+      // the texts are set differently on phones: set them again when the screen crosses over
+      if (narrow !== wasNarrow) { wasNarrow = narrow; if (shownText >= 0) { const at = shownText; shownText = -1; showTexts(at); } }
+    }
+
+    // progress in "pages turned": 0 … turns, for a (smoothed) scroll position y
+    function calendarProgress(y) {
+      const start = intro.offsetTop + OPEN * innerHeight;
+      const range = intro.offsetHeight - innerHeight * (1 + OPEN + OUTRO + THANKS - THANKS_LEAD);
+      if (range <= 0) return 0;
+      return clamp((y - start) / range, 0, 1) * turns;
+    }
+
+    function placeLeaf(leaf, s) {
+      const visible = s > -1 && s < SLOTS.length - 1;
+      leaf.g.style.display = visible ? "" : "none";
+      if (!visible) return;
+      const { l, r, h } = leaf.geo;
+      const { d, opacity, facing, behind } = pose(s, h);
+      if (!!behind !== !!leaf.behind) { leaf.behind = !!behind; restack(); }
+      const path = roundedQuad([
+        [l, HINGE_Y],
+        [r, HINGE_Y],
+        [r + d[0], HINGE_Y + d[1]],
+        [l + d[0], HINGE_Y + d[1]],
+      ], RADIUS);
+      leaf.shape.setAttribute("d", path);
+      leaf.clipShape.setAttribute("d", path);
+      leaf.g.style.opacity = opacity.toFixed(3);
+
+      // what's printed on the page (the day, the month band and its name) is printed on it: it takes the page's own
+      // shape as it turns, squashed towards the hinge and leaning with it, the way the page itself is drawn (each
+      // point keeps its place across the page and moves down it in proportion; the hinge line stays put)
+      const lean = d[0] / h, drop = d[1] / h;
+      const onPage = `matrix(1 0 ${lean.toFixed(4)} ${drop.toFixed(4)} ${(-lean * HINGE_Y).toFixed(3)} ${(HINGE_Y * (1 - drop)).toFixed(3)})`;
+      const ride = node => {
+        node.setAttribute("transform", onPage);
+        node.style.display = facing ? "" : "none";
+        // the days on the pages waiting behind stay hidden until they come forward
+        node.style.opacity = s > 0 ? (1 - smoothstep(0.45, 0.95, s)).toFixed(3) : "";
+      };
+      ride(leaf.num);
+      if (!framed && !stacked) ride(leaf.month);
+      if (stacked && leaf.p) { ride(leaf.band); ride(leaf.tab); }
+    }
+
+    // ---- gust: when the calendar takes over from the opening, a gust from below throws the front page
+    // (Jan 31) up over its hinge; it falls back onto the pad, bounces a little and settles. Runs on time. ----
+    const GUST = {
+      peak: 30,       // deg the page is thrown up to (90 would be edge-on)
+      up: 0.18,       // s to get there
+      fall: 0.4,      // s to fall back onto the pad
+      rebound: 0.12,  // each bounce reaches this share of the one before
+      bounces: 1,
+    };
+    let gustStart = null;
+    function gustAt(now) {
+      if (gustStart === null) return 0;
+      const t = (now - gustStart) / 1000;
+      if (t < GUST.up) return GUST.peak * (1 - Math.pow(1 - t / GUST.up, 3));
+      const f = t - GUST.up;
+      if (f >= GUST.fall * (2 * GUST.bounces + 1)) { gustStart = null; return 0; }
+      // falls from the top, touches the pad every 2 × fall, each bounce smaller
+      const decay = -Math.log(GUST.rebound) / (2 * GUST.fall);
+      return GUST.peak * Math.exp(-decay * f) * Math.abs(Math.cos(Math.PI / 2 * f / GUST.fall));
+    }
+
+    // While the gust plays the scroll can't go past the point where the first turn begins;
+    // scrolling back up stays free, and it lets go the moment the page has settled.
+    const gustHold = () => intro.offsetTop + OPEN * innerHeight;
+    const holding = () => gustStart !== null && scrollY >= gustHold() - 1;
+    addEventListener("scroll", () => { if (gustStart !== null && scrollY > gustHold()) scrollTo(0, gustHold()); });
+    addEventListener("wheel", e => { if (e.deltaY > 0 && holding()) e.preventDefault(); }, { passive: false });
+    let touchY = 0;
+    addEventListener("touchstart", e => { touchY = e.touches[0].clientY; }, { passive: true });
+    addEventListener("touchmove", e => { if (e.touches[0].clientY < touchY && holding()) e.preventDefault(); }, { passive: false });
+    addEventListener("keydown", e => {
+      if (holding() && ["ArrowDown", "PageDown", "End", " "].includes(e.key)) e.preventDefault();
+    });
+
+    let lastRendered = null, lastGust = 0, outroU = 0;
+    function render(progress) {
+      // ease each turn so the pad settles between pages
+      const whole = Math.min(Math.floor(progress), turns - 1);
+      const p = whole + easeInOut(clamp(progress - whole, 0, 1));
+      const gust = gustAt(performance.now());
+      if (p === lastRendered && gust === lastGust) return;
+      lastRendered = p;
+      lastGust = gust;
+      const k = Math.min(Math.floor(p), turns - 1);
+      showTexts(p - k < CUT ? k : k + 1);
+      renderArt(p);
+
+      // every turn swings the top leaf (e = the turn) over the hinge, and the pages behind move up a slot;
+      // the gust lifts the first page the same way a turn does (s < 0 is part-way over the hinge)
+      const lift = gust / 180 * OVER;
+      leaves.forEach(leaf => placeLeaf(leaf, leaf.e - p - (leaf.e === 0 ? lift : 0)));
+    }
+
+    // ---- texts: cut to the next event's texts the moment the turning page's day disappears
+    // (the page goes edge-on halfway through flipping over the hinge) ----
+    const CUT = OVER / 2;
+    const textEls = {
+      title: document.getElementById("calTitle"),
+      body: document.getElementById("calDesc"),
+      month: document.getElementById("calMonth"),
+    };
+    // every event's art is in the page from the start (so it is loaded before its cut); only one shows
+    const calBg = document.getElementById("calBg");
+    // fys: the frame offsets (--fy) the image is shown with — 0 in version 1, FRAME_FY in version 2
+    const FRAME_FY = 19;
+    function bgImg({ src, x, y, w, h }, fys) {
+      const img = document.createElement("img");
+      img.src = src;
+      img.alt = "";
+      img.hidden = true;
+      const bx = x + w / 2 - 720, by = y + h / 2 - 511;
+      img.style.setProperty("--bx", `${bx.toFixed(2)}px`);
+      img.style.setProperty("--by", `${by.toFixed(2)}px`);
+      img.style.setProperty("--bw", `${w}px`);
+      img.style.setProperty("--bh", `${h}px`);
+      // room for the off-centre shift, so the stage stays covered on any screen shape
+      img.style.setProperty("--bpadx", `${Math.ceil(2 * Math.abs(bx)) + 4}px`);
+      img.style.setProperty("--bpady", `${Math.ceil(2 * Math.max(...fys.map(f => Math.abs(by - f)))) + 4}px`);
+      calBg.appendChild(img);
+      return img;
+    }
+    // per event: [version 1's image, version 2's image] (the same one when version 2 has no box of its own)
+    const bgImgs = PAGES.map(page => {
+      if (!page.bg) return null;
+      const own = page.framed && page.framed.bg;
+      const one = bgImg(page.bg, own ? [0] : [0, FRAME_FY]);
+      return [one, own ? bgImg(page.framed.bg, [FRAME_FY]) : one];
+    });
+    // floating art: rides the page turns, so it moves with the scroll. While the event's page turns in
+    // it rises from just below the screen to its place; while the page turns away it goes on up and out.
+    const calArt = document.getElementById("calArt");
+    let stageScale = 1;
+    const artItems = PAGES.flatMap((page, i) => (page.art || []).map(a => {
+      const item = document.createElement("div");
+      item.className = "cal-art__item";
+      item.hidden = true;
+      for (const [k, v] of [["ax", a.x], ["ay", a.y], ["aw", a.w], ["ah", a.h]]) item.style.setProperty(`--${k}`, `${v}px`);
+      item.style.setProperty("--arot", `${a.rot}deg`);
+      item.style.setProperty("--acrop", `${a.crop * 100}%`);
+      const img = document.createElement("img");
+      img.src = a.src;
+      img.alt = "";
+      item.appendChild(img);
+      calArt.appendChild(item);
+      return { item, a, i, at: null };
+    }));
+
+    function renderArt(p) {
+      const vh = stage.clientHeight, s = stageScale;
+      for (const art of artItems) {
+        const rise = clamp(p - (art.i - 1), 0, 1), leave = clamp(p - art.i, 0, 1);
+        const on = rise > 0 && leave < 1;
+        art.item.hidden = !on;
+        if (!on) continue;
+        // its rotated bounds, on screen, when in place
+        const top = vh / 2 + (art.a.y - art.a.box / 2) * s, bottom = vh / 2 + (art.a.y + art.a.box / 2) * s;
+        const y = (1 - rise) * (vh - top) - leave * bottom;
+        if (y === art.at) continue;
+        art.at = y;
+        art.item.style.setProperty("--rise", `${y.toFixed(1)}px`);
+      }
+    }
+
+    // ---- version 1's panels: one per event, stacked in order. While a page turns, the next event's panel
+    // scrolls up from the bottom of the screen over the current one, and is in place when the turn ends. ----
+    const calPanels = document.getElementById("calPanels");
+    const PANEL = { y: 312.43, h: 709.57 }; // the panel in the 1440×1022 frame
+    const panels = PAGES.map(page => {
+      const node = document.createElement("div");
+      node.className = "cal-panel";
+      const { color, img } = page.panel || {};
+      node.style.backgroundColor = color || page.color || "";
+      if (img) {
+        const { x = 0, y = PANEL.y, w = 1440, h = PANEL.h } = img;
+        const bx = x + w / 2 - 720, by = y + h / 2 - (PANEL.y + PANEL.h / 2);
+        const pic = document.createElement("img");
+        pic.src = img.src;
+        pic.alt = "";
+        pic.style.setProperty("--bx", `${bx.toFixed(2)}px`);
+        pic.style.setProperty("--by", `${by.toFixed(2)}px`);
+        pic.style.setProperty("--bw", `${w}px`);
+        pic.style.setProperty("--bh", `${h}px`);
+        // room for the off-centre shift, so the panel stays covered on any screen shape
+        pic.style.setProperty("--bpadx", `${Math.ceil(2 * Math.abs(bx)) + 4}px`);
+        pic.style.setProperty("--bpady", `${Math.ceil(2 * Math.abs(by)) + 4}px`);
+        node.appendChild(pic);
+      }
+      // version 2 (Figma 5217-8665): some events have a picture filling the panel (1440 × 709.57 in the frame),
+      // over the event's colour; the others show the colour alone
+      if (page.v2.img) {
+        const pic = document.createElement("img");
+        pic.className = "cal-panel__v2";
+        pic.src = page.v2.img;
+        pic.alt = "";
+        for (const [k, v] of [["--bx", "0px"], ["--by", "0px"], ["--bw", "1440px"], ["--bh", `${PANEL.h}px`], ["--bpadx", "0px"], ["--bpady", "0px"]]) pic.style.setProperty(k, v);
+        node.appendChild(pic);
+        // decoded up front, so it's there the moment its panel comes up (not a beat after)
+        pic.decode().catch(() => {});
+        // and the phone's own picture (shown instead on phones; loaded lazily on wide screens)
+        const mpic = document.createElement("img");
+        mpic.className = "cal-panel__m";
+        mpic.alt = "";
+        mpic.loading = isPhone() ? "eager" : "lazy";
+        mpic.src = page.v2.phone.img;
+        node.style.setProperty("--v2m", page.v2.phone.bg);
+        node.appendChild(mpic);
+      }
+      // version 2: the event chip on the panel
+      const chip = document.createElement("span");
+      chip.className = "cal-chip";
+      chip.style.setProperty("--cal", page.v2.color);
+      chip.textContent = page.wix ? "Wix" : "Global";
+      node.style.setProperty("--v2", page.v2.color);
+      node.appendChild(chip);
+      calPanels.appendChild(node);
+      return { node, at: null };
+    });
+    // after the last event a white panel scrolls up over the last one, with the pad (see renderOutro)
+    const endPanel = document.createElement("div");
+    endPanel.className = "cal-panel";
+    endPanel.style.zIndex = "2";
+    endPanel.style.backgroundColor = "var(--bg)";
+    endPanel.hidden = true;
+    calPanels.appendChild(endPanel);
+    let endAt = null;
+    function renderEndPanel(u) {
+      endPanel.hidden = u <= 0;
+      if (u <= 0 || u === endAt) return;
+      endAt = u;
+      endPanel.style.transform = u < 1 ? `translateY(${((1 - u) * 100).toFixed(3)}%)` : "";
+    }
+    // q: events finished so far, continuous (the page turns, then the ending, 0 … turns + 1). The event coming in
+    // scrolls up from the bottom of the screen; the one finishing rises out of its way as a block of colour and goes
+    // into the pile (see renderStack).
+    // Version 1, and phones (no room above the panel for the pile): the next event's panel scrolls up over the current one.
+    // In version 2 the next panel comes up a little ahead of the block leaving (in place at ARRIVE), so little of
+    // the white shows between them.
+    const ARRIVE = 0.5;
+    const arrive = f => smoothstep(0, ARRIVE, f);
+    function renderPanels(q) {
+      const k = Math.min(Math.floor(q), turns), f = q - k;
+      const pile = stacked && innerWidth >= 760;
+      panels.forEach((panel, i) => {
+        // 0: in place, 1: just under the bottom of the screen
+        const at = i <= k ? 0 : i === k + 1 ? 1 - (pile ? arrive(f) : f) : 1;
+        // version 2: the finishing panel gives way to its block as soon as the turn starts
+        const hidden = pile ? (f > 0 ? i !== k + 1 : i !== k) || at >= 1 : i < k || at >= 1;
+        if (panel.node.hidden !== hidden) panel.node.hidden = hidden;
+        if (hidden || at === panel.at) return;
+        panel.at = at;
+        panel.node.style.transform = at ? `translateY(${(at * 100).toFixed(3)}%)` : "";
+      });
+      if (pile) renderStack(q);
+      else stackItems.forEach(item => { if (!item.node.hidden) item.node.hidden = true; });
+    }
+
+    // ---- the pile of finished events, top left over the panel line. Steps from the newest: [x, width, height] in
+    // the frame, each on top of the one below; from the fourth on they keep the fourth's size and go on up under
+    // the header. The colours are the events' frames in the header. ----
+    const STACK = { steps: [[0, 292, 133], [0, 157, 60], [-3, 109, 39], [-3, 109, 30]], drop: 1.27 };
+    const STACK_COLORS = ["#0773fa", "#f4511e", "#55c98b", "#d6d0fd", "#fbccfd", "#76574a", "#58dbe6", "#fecd53"];
+    // (black text on these, white on the rest)
+    const LIGHT_COLORS = ["#d6d0fd", "#fbccfd", "#58dbe6", "#fecd53"];
+    // version 2: each event's short name, and its date
+    const SHORT = ["Super Bowl ad", "DeviantArt", "Nintendo Switch", "SEO Wizard", "Karlie Kloss", "Usain Bolt", "Harry & Meghan", "Wix Code"];
+    // the pile leaving at the end: `join` of the ending for the last event to go in; from `from` of it (early, with
+    // the date pad going up) each block, oldest first and `step` apart, takes `each` of the rest to scroll up off the
+    // screen. The last event's block (and the Now line under it) starts once it has gone in.
+    const PILE_OUT = { join: 0.4, from: 0.08, step: 0.05, each: 0.6 };
+    let pileLift = 0, pileTailUp = 0;
+    // version 2: how far into its move into the pile (0 … 1, of the way it travels) the picture starts fading into the
+    // event's colour, and the name starts fading in on it: only over the last quarter of the way
+    const PILE_FADE = { pic: 0.75, label: 0.88 };
+    const calStack = document.getElementById("calStack");
+    const stackItems = PAGES.map((page, i) => {
+      const node = document.createElement("div");
+      node.className = "cal-stack__item";
+      node.hidden = true;
+      node.style.setProperty("--c", STACK_COLORS[i] || (page.panel && page.panel.color) || page.color);
+      node.dataset.cal = page.wix ? "wix" : "world";
+      node.classList.toggle("is-light", LIGHT_COLORS.includes(STACK_COLORS[i]));
+      const img = page.panel && page.panel.img;
+      if (img) {
+        const pic = document.createElement("img");
+        pic.src = img.src;
+        pic.alt = "";
+        node.appendChild(pic);
+      }
+      if (page.v2.img) {
+        const pic = document.createElement("img");
+        pic.className = "cal-stack__pic";
+        pic.src = page.v2.img;
+        pic.alt = "";
+        node.appendChild(pic);
+      }
+      // version 2: its name and date, as on an event chip
+      const label = document.createElement("span");
+      label.className = "cal-stack__label";
+      const name = document.createElement("b"), when = document.createElement("i");
+      name.textContent = SHORT[i] || page.month;
+      when.textContent = `${dateOf(page).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" })}  ·  ${page.wix ? "Wix" : "The world"}`;
+      label.append(name, when);
+      // the panel's chip, which shrinks into the pile with the block
+      const chip = document.createElement("span");
+      chip.className = "cal-chip";
+      chip.style.setProperty("--cal", page.v2.color);
+      chip.textContent = page.wix ? "Wix" : "Global";
+      node.append(chip, label);
+      calStack.appendChild(node);
+      return { node, box: "", tint: -1, size: "", labelO: -1, chip: "" };
+    });
+    // the box of step r (-1: the whole panel), in px on the stage
+    function stackBox(r, top, sc, W, H) {
+      if (r < 0) return [0, top, W, H - top];
+      let bottom = top + STACK.drop * sc;
+      for (let j = 0; j < r; j++) bottom -= STACK.steps[Math.min(j, 3)][2] * sc;
+      const [x, w, h] = STACK.steps[Math.min(r, 3)];
+      return [x * sc, bottom - h * sc, w * sc, h * sc];
+    }
+    function renderStack(q) {
+      const W = calLayer.clientWidth, H = calLayer.clientHeight;
+      if (!H) return;
+      const top = calPanels.offsetTop, sc = stageScale;
+      stackItems.forEach((item, i) => {
+        // its place in the pile: -1 while it is the event on show, 0 the newest step, 1 the next one up …
+        const at = q - i - 1;
+        const off = at <= -1;
+        if (item.node.hidden !== off) item.node.hidden = off;
+        if (off) return;
+        const r = Math.floor(at), t = at - r;
+        const a = stackBox(r, top, sc, W, H), b = stackBox(r + 1, top, sc, W, H);
+        // the finishing event goes from the whole panel straight to its step in one move
+        let [x, y, w, h] = a.map((v, j) => lerp(v, b[j], t));
+        // at the end the pile scrolls up and away, the oldest first
+        const up = pileLift > 0 ? easeInOut(clamp((pileLift - i * PILE_OUT.step) / PILE_OUT.each, 0, 1)) * (y + h + 8) : 0;
+        y -= up;
+        // the last event's block is the pile's bottom one: the Now line rides along under it (renderLift)
+        if (i === stackItems.length - 1) pileTailUp = up;
+        const box = `${x.toFixed(1)} ${y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`;
+        if (box !== item.box) {
+          item.box = box;
+          Object.assign(item.node.style, { left: `${x.toFixed(1)}px`, top: `${y.toFixed(1)}px`, width: `${w.toFixed(1)}px`, height: `${h.toFixed(1)}px` });
+        }
+        // the picture gives way to the colour on the way into the pile (version 2: it shrinks with the block and
+        // fades into the colour over the last part of the way, PILE_FADE.pic, so it's gone as the block lands)
+        // (a straight ramp: the move itself is already eased, so this keeps the fade spread over it; the last event's
+        // move at the end is short, so its fade follows the scroll itself over that part of the ending instead)
+        const into = stacked && i === stackItems.length - 1 && outroU > 0 ? clamp(outroU / PILE_OUT.join, 0, 1) : at + 1;
+        const tint = stacked ? clamp((into - PILE_FADE.pic) / (1 - PILE_FADE.pic), 0, 1) : smoothstep(0, 0.4, at + 1);
+        if (tint !== item.tint) { item.tint = tint; item.node.style.setProperty("--tint", tint.toFixed(3)); }
+        // and its name comes up on it once it is mostly colour; the label's size follows the block's
+        const labelO = stacked ? smoothstep(PILE_FADE.label, 1, into) : smoothstep(0.55, 0.95, at + 1);
+        if (labelO !== item.labelO) { item.labelO = labelO; item.node.style.setProperty("--label-o", labelO.toFixed(3)); }
+        // the Wix / Global chip shrinks with the block as it goes in, and gives way to the name
+        const chip = `${(w / W).toFixed(4)} ${(1 - smoothstep(0.35, 0.8, at + 1)).toFixed(3)}`;
+        if (chip !== item.chip) {
+          item.chip = chip;
+          const [k, o] = chip.split(" ");
+          item.node.style.setProperty("--chip-k", k);
+          item.node.style.setProperty("--chip-o", o);
+        }
+        const size = h >= 100 * sc ? "is-big" : h >= 50 * sc ? "is-mid" : "";
+        if (size !== item.size) {
+          if (item.size) item.node.classList.remove(item.size);
+          if (size) item.node.classList.add(size);
+          item.size = size;
+        }
+      });
+    }
+
+    // ---- ruled lines: sheets stacked until they reach `travel` px below the screen's bottom edge ----
+    const LINES = { src: "assets/bg-lines.svg", sheet: 1028.01 };
+    function fillLines(el, scale, travel) {
+      const top = innerHeight / 2 + parseFloat(el.style.getPropertyValue("--ly")) * scale;
+      const n = Math.max(1, Math.ceil((innerHeight + travel - top) / (LINES.sheet * scale)));
+      while (el.children.length < n) {
+        const img = document.createElement("img");
+        img.src = LINES.src;
+        img.alt = "";
+        img.style.setProperty("--k", el.children.length);
+        el.appendChild(img);
+      }
+      while (el.children.length > n) el.lastChild.remove();
+    }
+    const lineEls = PAGES.map(page => {
+      if (page.lines == null) return null;
+      const el = document.createElement("div");
+      el.className = "lines";
+      el.hidden = true;
+      el.style.setProperty("--ly", `${page.lines - 511}px`);
+      calBg.appendChild(el);
+      return el;
+    });
+
+    let shownBg = -1, shownImg = null;
+    function showBg(i, force) {
+      const at = calLayer.hidden || !PAGES[i] ? -1 : i;
+      if (at === shownBg && !force) return;
+      const img = at >= 0 && bgImgs[at] ? bgImgs[at][framed ? 1 : 0] : null;
+      if (shownImg && shownImg !== img) shownImg.hidden = true;
+      if (img) img.hidden = false;
+      shownImg = img;
+      if (lineEls[shownBg]) lineEls[shownBg].hidden = true;
+      if (lineEls[at]) lineEls[at].hidden = false;
+      shownBg = at;
+      calBg.style.backgroundColor = at < 0 ? "" : PAGES[at].color || "";
+      const chip = at < 0 ? "" : (PAGES[at].framed && PAGES[at].framed.chip) || PAGES[at].color || "";
+      if (chip) document.body.style.setProperty("--chip-ev", chip);
+      else document.body.style.removeProperty("--chip-ev");
+      document.body.classList.toggle("has-bg", at >= 0 && !!(PAGES[at].bg || PAGES[at].color));
+    }
+
+    // ---- two versions to compare, both with the texts on white over a panel per event:
+    // 1 = the next event's panel scrolls up over the current one, and the header's timeline fills in with the events;
+    // 2 = each finished event shrinks into a pile of colours top left (Figma 5173-900 …), and the header's timeline
+    //     stays plain.
+    // The switch keeps the choice in the address (?layout=2), so a link opens on the same version.
+    // (The earlier version 2, the art in a rounded frame under the header, is still in the code behind `framed`,
+    // which nothing turns on now.) ----
+    const framed = false;
+    // the site is version 2 only now (version 1 and the switch between them are gone; its code paths stay unused)
+    let stacked = true;
+    function setLayout(two) {
+      stacked = two;
+      document.body.classList.toggle("framed", framed);
+      document.body.classList.toggle("panels", !framed);
+      document.body.classList.toggle("stack", two);
+      numY = framed ? PAGE_NUM_Y.framed : PAGE_NUM_Y.panels;
+      leaves.forEach(leaf => {
+        // version 2 places each day where Figma has it, with its own tracking
+        const v = two && leaf.p ? leaf.p.v2 : null;
+        leaf.numSize = v ? V2_NUM.size : leaf.geo.num.size;
+        leaf.numY = v ? v.top + 0.5 + PAGE_BAND.numBase * leaf.numSize / BIG.num.size : numY;
+        leaf.num.setAttribute("font-size", leaf.numSize);
+        leaf.num.setAttribute("y", leaf.numY);
+        leaf.num.setAttribute("letter-spacing", v ? v.track : leaf.geo.num.track);
+      });
+      lastRendered = null;
+      // the versions set the titles and descriptions differently
+      if (shownText >= 0) { const at = shownText; shownText = -1; showTexts(at); }
+      // old links with ?layout=… keep working: the parameter is just dropped
+      const url = new URL(location.href);
+      if (url.searchParams.has("layout")) { url.searchParams.delete("layout"); history.replaceState(null, "", url); }
+      showBg(shownText, true);
+    }
+
+    let shownText = -1;
+    function showTexts(i) {
+      showBg(i);
+      if (i === shownText) return;
+      shownText = i;
+      placeTexts(i);
+      for (const key in textEls) {
+        const node = textEls[key];
+        node.replaceChildren();
+        textOf(PAGES[i], key).split("\n").forEach((line, li) => {
+          // the space keeps the words apart where a break is dropped (phones)
+          if (li) node.append(" ", document.createElement("br"));
+          node.appendChild(document.createTextNode(line));
+        });
+      }
+    }
+    // version 2 (Figma version 6, 5240-9574): the title (38px, 46px a line) and its paragraph (28px a line) 18 under
+    // it, as one block in the white above the panel, its top at y 93.2 of the frame on every event
+    const TEXT_BLOCK = { top: 93.2, title: 46, gap: 18, line: 28 };
+    function placeTexts(i) {
+      const line = TEXT_BLOCK.line;
+      const lines = key => textOf(PAGES[i], key).split("\n").length;
+      const t = lines("title") * TEXT_BLOCK.title;
+      const top = TEXT_BLOCK.top;
+      calLayer.style.setProperty("--tt", top.toFixed(2));
+      calLayer.style.setProperty("--dt", (top + t + TEXT_BLOCK.gap).toFixed(2));
+      calLayer.style.setProperty("--dl", String(line));
+      // phones (Figma 5303-235): the title (24px, 28 a line) and the paragraph (15px, 19 a line) 14 under it, the
+      // block centred in the white between the header (39) and the panel (236)
+      if (stacked && isPhone()) {
+        const ph = PAGES[i].v2.phone, tl = ph.line || PHONE_TEXT.title;
+        const h = lines("title") * tl + PHONE_TEXT.gap + lines("body") * PHONE_TEXT.line;
+        const mt = (PHONE_TEXT.from + PHONE_TEXT.to) / 2 - h / 2;
+        calLayer.style.setProperty("--mtt", `${mt.toFixed(2)}px`);
+        calLayer.style.setProperty("--mdt", `${(mt + lines("title") * tl + PHONE_TEXT.gap).toFixed(2)}px`);
+        calLayer.style.setProperty("--mtl", `${tl}px`);
+      }
+    }
+    const PHONE_TEXT = { from: 39, to: 236, title: 28, gap: 14, line: 19 };
+    // version 1 has its own line breaks for the title and the description
+    function textOf(page, key) {
+      if (stacked && isPhone() && (key === "title" || key === "body")) return page.v2.phone[key];
+      if (stacked && key === "title" && page.v2.title) return page.v2.title;
+      if (stacked && key === "body" && page.v2.body) return page.v2.body;
+      if (!framed && key === "title" && page.wideTitle) return page.wideTitle;
+      if (!framed && key === "body" && page.lead) return page.lead;
+      return page[key];
+    }
+
+    // ---- ending: once Dec 5 has had its turn, the pad scrolls away with the page and the event's texts scroll up
+    // and off the screen whole, the way the opening's words do: the title first, then the paragraph a little after it
+    // (OUT_TEXT.step of the ending), each picking up speed as it goes (depth: how far, in viewports per ending) ----
+    const OUT_TEXT = { step: 0.08, depth: 0.9 };
+    const yearEl = document.querySelector(".cal-year");
+
+    function renderOutro(y) {
+      const start = intro.offsetTop + innerHeight * OPEN + turns * innerHeight;
+      const lift = clamp(y - start, 0, OUTRO * innerHeight);
+      calendar.style.setProperty("--lift", `${lift.toFixed(1)}px`);
+      const u = lift / (OUTRO * innerHeight);
+      outroU = u;
+      renderEndPanel(u);
+      [textEls.title, textEls.body, textEls.month, yearEl].forEach((el, i) => {
+        const a = i * OUT_TEXT.step, w = clamp((u - a) / (1 - a), 0, 1);
+        const dy = reduceMotion ? (w > 0 ? -innerHeight : 0) : -Math.pow(w, 1.3) * OUT_TEXT.depth * innerHeight;
+        el.style.translate = dy ? `0 ${dy.toFixed(1)}px` : "";
+      });
+    }
+
+    // ---- thank-you: once the white has covered the last event, the event colours unfold as thin stripes along the
+    // bottom (Figma 5173-1813), timed rather than scrolled. Each comes up out from under the one below it, the bottom
+    // one from the bottom edge. [top in the frame, colour, height], bottom (outermost) first. ----
+    const STRIPES = [
+      [1002, "#ffdc7a", 36.09], [982.03, "#ffc2fe", 19.97], [962.15, "#795548", 19.88], [943.24, "#ff6e7c", 19.88],
+      [923.52, "#d6d0fd", 19.97], [903.55, "#33b679", 19.97], [883.67, "#f4511e", 19.88], [864.76, "#0d79fb", 19.88],
+    ];
+    // The unfold plays on its own clock once the scroll reaches the thank-you (it doesn't follow the scroll):
+    // `time` s in all; each stripe starts `step` into it and takes `each` (parts of the whole), eased in and out.
+    const UNFOLD = { time: 1.6, step: 0.1, each: 0.3 };
+    const thanksEl = document.getElementById("thanks");
+    const thanksText = document.getElementById("thanksText");
+    const thanksCta = document.getElementById("thanksCta");
+    // thanksT: how far the unfold is (0 … 1); thanksSince: the last frame's time
+    let thanksScale = 1, thanksAt = null, thanksSince = null, thanksT = 0, thanksOn = false;
+    const stripeEls = STRIPES.map(([, color], i) => {
+      const node = document.createElement("div");
+      node.className = "thanks__stripe";
+      node.style.background = color;
+      node.style.zIndex = String(10 - i); // the outer stripe covers the next one until it has come out
+      // version 2: the stripe is an event's all-day bar (bottom stripe = the last event)
+      const ev = STRIPES.length - 1 - i, page = PAGES[ev];
+      if (page) {
+        const bar = document.createElement("div");
+        bar.className = "thanks__bar";
+        bar.style.setProperty("--c", STACK_COLORS[ev]);
+        bar.classList.toggle("is-light", LIGHT_COLORS.includes(STACK_COLORS[ev]));
+        const name = document.createElement("span"), when = document.createElement("span");
+        name.textContent = SHORT[ev];
+        when.className = "bar__when";
+        // short, so it stays clear of the footer card that comes up over the bars' middle
+        when.textContent = dateOf(page).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+        bar.append(name, when);
+        node.appendChild(bar);
+      }
+      thanksEl.insertBefore(node, thanksText);
+      return node;
+    });
+    // the footer (Figma 5173-1813): its top in the frame when in place, and the part of the thank-you's
+    // THANKS viewports over which it rises
+    const FOOTER = { top: 913.53, topV2: 766.21, from: 0.3, to: 0.95 }; // (in place just before the end, so the scroll never comes up short)
+    const thanksFooter = document.getElementById("thanksFooter");
+    let footerU = 0, footerAt = null;
+    function renderFooter() {
+      const off = footerU <= 0;
+      if (thanksFooter.hidden !== off) thanksFooter.hidden = off;
+      if (off) { footerAt = null; return; }
+      // (phones, version 2: its top 246.2 above the bottom edge of the phone frame, Figma 5280-518)
+      const phone = stacked && isPhone(), k = phone ? heroPhoneScale() : thanksScale;
+      const H = stage.clientHeight, rest = H - (phone ? 246.2 : 1022 - (stacked ? FOOTER.topV2 : FOOTER.top)) * k;
+      // version 2: the closing line comes up a little and fades in over the bars' top (the frame's bottom stays at the screen's)
+      const top = stacked ? rest + (1 - footerU) * 28 * k : H - (H - rest) * footerU;
+      if (stacked) thanksFooter.style.opacity = footerU.toFixed(3);
+      if (top === footerAt) return;
+      footerAt = top;
+      thanksFooter.style.setProperty("--footer-y", `${top.toFixed(2)}px`);
+    }
+    // version 2 (Figma 5216-7297): nothing runs on a clock — over the THANKS viewports the invite card comes up from
+    // the bottom and settles, then the all-day bars come out one under another, then the footer card comes up over them; each
+    // part of the way follows the scroll, and goes back the same way. [from, to]: parts of the THANKS scroll.
+    // the card comes in first; the squares come round it and, at the same time, the bars come up from the bottom;
+    // then the footer card comes up over them
+    const THANKS_V2 = { card: [0, 0.4], ring: [0.1, 0.7], bars: [0.1, 0.7], footer: [0.66, 0.97] };
+    // the arc of squares (Figma 5216-8583): they sit on an ellipse round the title — centre (714.23, 389.5) in the frame,
+    // 413.9 across and 190.5 up — their centres in the frame below (each one's own angle and reach on the ellipse
+    // follow from it, so each lands exactly where the design has it). Each comes round the ellipse into
+    // its place from further down its own side (the right ones up the right, the left ones up the left), turning
+    // as it goes, from the middle one out.
+    const RING = { cx: 714.23, cy: 389.5, a: 413.88, b: 190.5, travel: 125, step: 0.11, each: 0.67 };
+    // m: the square's centre in the phone frame (Figma 5280-518, 390 × 844), on its own ellipse (RING_M); mc: its colour
+    // there when it differs
+    const RING_SQ = [
+      { c: "#f2f6fc", x: 714.23, y: 199, k: 0, side: 1, m: [199.2, 216], mc: "#d6d0fd" },
+      { c: "#0773fa", x: 889.5, y: 213, k: 1, m: [272.2, 225] }, { c: "#fecd53", x: 538.97, y: 213, k: 1, m: [115.2, 225] },
+      { c: "#54c88d", x: 1047, y: 277.88, k: 2, m: [337.2, 268] }, { c: "#58dbe6", x: 381.47, y: 277.88, k: 2, m: [50.2, 268] },
+      { c: "#fbcbfd", x: 1128, y: 393, k: 3, m: [357.5, 344] }, { c: "#76574a", x: 300.47, y: 393, k: 3, m: [25, 344] },
+    ];
+    const RING_M = { cx: 193.7, cy: 344, a: 166, b: 128 };
+    const thanksRing = document.getElementById("thanksRing");
+    const onEllipse = ([x, y], r) => { const u = (x - r.cx) / r.a, w = (r.cy - y) / r.b; return { at: Math.atan2(u, w) * 180 / Math.PI, reach: Math.hypot(u, w) }; };
+    RING_SQ.forEach(sq => {
+      sq.el = document.createElement("span");
+      sq.el.className = "ring__sq";
+      sq.el.style.setProperty("--c", sq.c);
+      const { at, reach } = onEllipse([sq.x, sq.y], RING);
+      sq.at = at; // degrees clockwise from the top
+      sq.reach = reach; // 1 = on the ellipse
+      sq.phone = onEllipse(sq.m, RING_M);
+      sq.side = sq.side || Math.sign(sq.at);
+      sq.last = null;
+      thanksRing.appendChild(sq.el);
+    });
+    function renderRing(t) {
+      const ts = thanksScale, W = thanksRing.clientWidth, H = thanksRing.clientHeight, phone = isPhone(), pm = heroPhoneScale();
+      // phones: the phone frame's own ellipse, from the screen's centre
+      const a = phone ? RING_M.a * pm : RING.a * ts, b = phone ? RING_M.b * pm : RING.b * ts;
+      const cx = phone ? W / 2 + (RING_M.cx - 195) * pm : W / 2 + (RING.cx - 720) * ts;
+      const cy = phone ? H / 2 + (RING_M.cy - 422) * pm : RING.cy * ts;
+      RING_SQ.forEach(sq => {
+        const v = clamp((t - sq.k * RING.step) / RING.each, 0, 1);
+        const e = reduceMotion ? (v > 0 ? 1 : 0) : easeInOut(v);
+        if (e === sq.last) return;
+        sq.last = e;
+        sq.el.style.setProperty("--c", phone && sq.mc ? sq.mc : sq.c);
+        const { at, reach } = phone ? sq.phone : sq;
+        const back = (1 - e) * RING.travel * sq.side; // degrees still to go
+        const th = (at + back) * Math.PI / 180;
+        const x = cx + a * reach * Math.sin(th), y = cy - b * reach * Math.cos(th);
+        sq.el.style.transform = `translate(${x.toFixed(2)}px, ${y.toFixed(2)}px) rotate(${(-back * 1.5).toFixed(1)}deg) scale(${(0.5 + 0.5 * e).toFixed(3)})`;
+        sq.el.style.opacity = smoothstep(0, 0.45, e).toFixed(3);
+      });
+    }
+    // the glide to the end: once the thank-you's title has almost come up to its place (AUTO_END.at of its rise),
+    // scrolling down, the page carries on to the end by itself, so the rest of the section (the squares, the bars and
+    // the closing line) comes in on its own. It takes over at the speed the reader is scrolling at and slows down
+    // gently to a stop at the end, like a flick that runs out, so there's no seam between the reader's scroll and its
+    // own; if the reader keeps scrolling down it picks up their new speed from wherever they've got to. Scrolling back
+    // up, a touch, a click or a key stops it (scrolling on down doesn't: a trackpad's own glide keeps sending those for
+    // a while); it is ready again once the title has gone back down.
+    // at: share of the title's rise; min/max: ms for the glide; ease: how much faster than its average speed it
+    // starts (1 = steady, up to 3; higher eases out more). If the reader was scrolling slowly it starts at their
+    // speed, builds up a little and then slows down to the end (the max time keeps it from crawling)
+    const AUTO_END = { at: 0.85, min: 700, max: 1800, ease: 1.8 };
+    let autoArmed = true, autoRun = null, autoLastY = null, autoLastT = 0, autoSeen = 0, autoPlan = null;
+    // the reader's own scroll speed: px/ms over the last ~120 ms of scroll events
+    const scrollTrail = [];
+    addEventListener("scroll", () => {
+      const now = performance.now();
+      scrollTrail.push([now, scrollY]);
+      while (scrollTrail.length > 2 && now - scrollTrail[0][0] > 120) scrollTrail.shift();
+    }, { passive: true });
+    function scrollSpeed() {
+      const now = performance.now(), recent = scrollTrail.filter(([t]) => now - t < 160);
+      if (recent.length < 2) return 0;
+      const [t0, y0] = recent[0], [t1, y1] = recent[recent.length - 1];
+      return t1 > t0 ? Math.max(0, (y1 - y0) / (t1 - t0)) : 0;
+    }
+    // a glide from here to the end that starts at speed v (px/ms) and comes to rest there: a cubic curve whose
+    // starting slope matches v, over a time chosen so it starts `ease` times faster than it goes on average
+    function planGlide(v) {
+      const from = scrollY, to = document.documentElement.scrollHeight - innerHeight, d = to - from;
+      if (d < 2) return null;
+      const speed = Math.max(v, 1e-3);
+      const ms = clamp(AUTO_END.ease * d / speed, AUTO_END.min, AUTO_END.max);
+      return { from, d, ms, t0: performance.now(), m: clamp(speed * ms / d, 0, 3) };
+    }
+    // position along the glide at s (0 … 1): Hermite curve from 0 to 1 with slope m at the start and 0 at the end
+    const glideAt = (s, m) => (s * s * s - 2 * s * s + s) * m + (3 * s * s - 2 * s * s * s);
+    function autoEnd(go, y) {
+      // the speed the reader sees: the page's smoothed scroll (y), which trails their own a little
+      const now = performance.now();
+      const down = autoLastY !== null && y > autoLastY;
+      if (autoLastY !== null && now > autoLastT) autoSeen = Math.max(0, (y - autoLastY) / (now - autoLastT));
+      autoLastY = y; autoLastT = now;
+      if (!go) { if (!autoRun) autoArmed = true; return; }
+      // a header button's glide is already taking the page to the end, on its own ease
+      if (Site.gliding) { autoArmed = false; return; }
+      if (!autoArmed || !down || autoRun) return;
+      autoArmed = false;
+      if (reduceMotion) { scrollTo(0, document.documentElement.scrollHeight - innerHeight); return; }
+      autoPlan = planGlide(Math.max(scrollSpeed(), autoSeen));
+      if (!autoPlan) return;
+      let last = scrollY;
+      const step = now => {
+        if (!autoRun) return;
+        // the reader scrolled on ahead of the glide: start a new one from there, at their speed
+        if (scrollY > last + 1) autoPlan = planGlide(scrollSpeed()) || autoPlan;
+        const { from, d, ms, t0, m } = autoPlan;
+        const t = clamp((now - t0) / ms, 0, 1);
+        const at = from + d * glideAt(t, m);
+        if (at > scrollY) scrollTo(0, at);
+        last = scrollY;
+        if (t < 1) autoRun = requestAnimationFrame(step); else autoRun = null;
+      };
+      autoRun = requestAnimationFrame(step);
+    }
+    const stopAutoEnd = () => { if (autoRun) { cancelAnimationFrame(autoRun); autoRun = null; } };
+    addEventListener("wheel", e => { if (e.deltaY < 0) stopAutoEnd(); }, { passive: true });
+    addEventListener("touchstart", stopAutoEnd, { passive: true });
+    addEventListener("keydown", stopAutoEnd);
+    addEventListener("mousedown", stopAutoEnd);
+    let ringW = null;
+    function renderThanksV2(y, start) {
+      const on = y >= start;
+      if (thanksEl.hidden === on) thanksEl.hidden = !on;
+      thanksEl.classList.remove("is-folding");
+      document.body.classList.toggle("on-thanks", on);
+      thanksT = 0; thanksAt = null; thanksSince = null;
+      if (!on) { footerU = 0; renderFooter(); return; }
+      const p = clamp((y - start) / (THANKS * innerHeight), 0, 1);
+      const part = ([a, b]) => { const v = clamp((p - a) / (b - a), 0, 1); return reduceMotion ? v : easeInOut(v); };
+      const H = stage.clientHeight, ts = thanksScale;
+      const card = part(THANKS_V2.card), cardTop = thanksInvite.offsetTop + inviteTitle.offsetTop; // (the title comes up from the bottom edge)
+      thanksInvite.style.transform = card < 1 ? `translateY(${((1 - card) * (H - cardTop)).toFixed(1)}px)` : "";
+      thanksInvite.style.opacity = ""; thanksInvite.style.visibility = "";
+      const ringKey = `${thanksRing.clientWidth}x${thanksRing.clientHeight}@${ts}`;
+      if (ringW !== ringKey) { ringW = ringKey; RING_SQ.forEach(sq => { sq.last = null; }); }
+      const ringT = clamp((p - THANKS_V2.ring[0]) / (THANKS_V2.ring[1] - THANKS_V2.ring[0]), 0, 1);
+      renderRing(ringT);
+      // once the title has almost come up to its place, on the way down, the page glides on to the end
+      autoEnd(card >= AUTO_END.at, y);
+      placeStripes(clamp((p - THANKS_V2.bars[0]) / (THANKS_V2.bars[1] - THANKS_V2.bars[0]), 0, 1), H, ts);
+      footerU = part(THANKS_V2.footer);
+      renderFooter();
+    }
+    // the stripes (version 2: the bars) at unfold t: each one's bottom edge, from the bottom of the screen (or the
+    // stripe below it) up to its place; the frame's bottom stays at the screen's
+    function placeStripes(t, H, ts) {
+      const unfold = i => reduceMotion ? (t > 0 ? 1 : 0) : easeInOut(clamp((t - i * UNFOLD.step) / UNFOLD.each, 0, 1));
+      // phones (version 2, Figma 5280-518): the bars 17 high and 3 apart, the last one's bottom 8 above the frame's
+      // bottom edge, each in a 20-high stripe
+      // and on wide screens (Figma 5277-518): 18 high and 4 apart, the last one's bottom 9 above the frame's bottom edge,
+      // each in a 22-high stripe
+      const phone = stacked && isPhone(), pm = heroPhoneScale();
+      const box = (stripe, i) => phone ? [817.5 - 20 * i, , 20] : stacked ? [993 - 22 * i, , 22] : stripe;
+      const bottomOf = ([fy, , fh]) => phone ? H - (844 - (fy + fh)) * pm : H - (1022 - (fy + fh)) * ts;
+      let prevBottom = 0;
+      STRIPES.forEach((stripe, i) => {
+        const e = unfold(i), to = bottomOf(box(stripe, i)), h = box(stripe, i)[2] * (phone ? pm : ts);
+        const bottom = i === 0 ? to + (H + h - to) * (1 - e) : prevBottom - (bottomOf(box(STRIPES[i - 1], i - 1)) - to) * e;
+        prevBottom = bottom;
+        const node = stripeEls[i];
+        node.style.height = `${(h + 1).toFixed(2)}px`;
+        node.style.transform = `translateY(${(bottom - h).toFixed(2)}px)`;
+      });
+    }
+    function renderThanks(y) {
+      const start = intro.offsetTop + innerHeight * (OPEN + OUTRO - THANKS_LEAD) + turns * innerHeight;
+      if (stacked) { renderThanksV2(y, start); return; }
+      thanksInvite.style.transform = "";
+      const on = y >= start;
+      // the unfold runs forwards while the scroll is in the thank-you, and back (folding the stripes away, the
+      // inner ones first) once it scrolls back above it; either way on its own clock, from wherever it is
+      const now = performance.now();
+      const dt = thanksSince === null ? 0 : (now - thanksSince) / 1000;
+      thanksSince = now;
+      if (reduceMotion) thanksT = on ? 1 : 0;
+      else thanksT = clamp(thanksT + (on ? 1 : -1) * dt / UNFOLD.time, 0, 1);
+      const shown = on || thanksT > 0;
+      if (thanksEl.hidden === shown) thanksEl.hidden = !shown;
+      // folding back it lets what's under it show (the white end panel, or the events after a quick scroll up)
+      thanksEl.classList.toggle("is-folding", !on);
+      document.body.classList.toggle("on-thanks", on);
+      if (!shown) { thanksAt = null; footerU = 0; renderFooter(); return; }
+      // once the stripes are all out, the footer scrolls up with the page; it goes back down the same way
+      const rise = thanksT >= 1 && on ? clamp((y - start - FOOTER.from * innerHeight) / ((FOOTER.to - FOOTER.from) * innerHeight), 0, 1) : 0;
+      // (eased towards, so it doesn't jump when the stripes finish after a quick scroll)
+      footerU = reduceMotion ? rise : footerU + (rise - footerU) * Math.min(1, dt * 12);
+      if (Math.abs(rise - footerU) < 1e-3) footerU = rise;
+      renderFooter();
+      const t = thanksT;
+      if (t === thanksAt && on === thanksOn) return;
+      thanksAt = t;
+      thanksOn = on;
+      placeStripes(t, stage.clientHeight, thanksScale);
+      // the text comes in as the stripes start, and goes first when they fold back
+      const textIn = (reduceMotion ? (on ? 1 : 0) : on ? smoothstep(0, 0.15, t) : smoothstep(0.85, 1, t)).toFixed(3);
+      thanksText.style.opacity = textIn;
+      // and the button with it
+      thanksCta.style.opacity = textIn;
+      thanksCta.style.visibility = +textIn > 0 ? "" : "hidden";
+      thanksInvite.style.opacity = textIn;
+      thanksInvite.style.visibility = +textIn > 0 ? "" : "hidden";
+    }
+
+    // ---- the header's timeline bar: one frame of colour per event, filled in as the scroll gets to it (Figma 5168-588).
+    // The first fills while the opening gives way to Jan 31; each next one while the page turns to its event. ----
+    const tlSegs = [...document.querySelectorAll(".header__seg")];
+    const tlAt = tlSegs.map(() => null);
+    function renderTimeline(y) {
+      const prog = calendarProgress(y);
+      const whole = Math.min(Math.floor(prog), turns - 1);
+      const p = whole + easeInOut(clamp(prog - whole, 0, 1)); // the same easing as the page turns
+      const first = enterOf(y); // with the first event coming up
+      tlSegs.forEach((seg, i) => {
+        const f = i === 0 ? first : clamp(p - (i - 1), 0, 1);
+        if (f === tlAt[i]) return;
+        tlAt[i] = f;
+        seg.style.setProperty("--fill", f.toFixed(4));
+      });
+    }
+
+    // ---- the opening's coloured blocks (Figma 5216-8300), in the 1440×1022 frame. In DOM order: four behind the 2017,
+    // the green one in front of it. depth is how fast each drifts up while the first event comes up over the opening
+    // (in viewports per OPEN): the far ones lag behind, the near ones race ahead of the event, which reads as space.
+    // Each block's colour gathers into its middle as it nears the frame's centre and goes grey away from it.
+    const HERO_BLOCKS = [
+      { x: 58,   y: 139, w: 217, h: 240, c: "#5e97ff", depth: 0.45 },
+      { x: 1073, y: 76,  w: 292, h: 63,  c: "#fbcbfd", depth: 0.25 },
+      { x: 1213, y: 850, w: 292, h: 212, c: "#ffca4e", depth: 1.35 },
+      { x: -195, y: 956, w: 562, h: 133, c: "#77574a", depth: 1.2 },
+      { x: 847,  y: 717, w: 152, h: 133, c: "#00935f", depth: 1.7 },
+    ];
+    const HERO_GREY = "#ededed";
+    // the opening's small squares in the events' colours (Figma 5216-8447), 20 × 20 in the frame. For depth, the far
+    // ones (back) sit behind the 2017 and the words and drift up slowly, so they slide under the letters; the near ones
+    // (front) sit over them and rise faster. depth: how fast each drifts up while the first event comes up.
+    // Split so both kinds touch the letters: at rest the purple sits under the 1's stroke and the yellow over the 2;
+    // on the way up the pink slides under the 7's bar and the cyan under the 2's foot, while the light green passes
+    // over the 1 and "happened"
+    // phones are laid out by the 390 × 844 phone frames (Figma 5303-235): this is the screen against that frame
+    function heroPhoneScale() { return Math.min(innerWidth / 390, innerHeight / 844); }
+    // (Figma 5277-599, updated). m: the square's top-left in the phone frame (Figma 5280-599, 390 × 844, 14 × 14);
+    // the ones without m stay off phones, and the one with x: null shows on phones only
+    const HERO_DOTS = [
+      { x: 1114,   y: 102.98, c: "#77574a", depth: 0.3,  front: false, m: [299, 88] },
+      { x: -2,     y: 214,    c: "#54c88d", depth: 0.5,  front: false, m: [-3.4, 121.5] },
+      { x: 1382,   y: 599,    c: "#fbcbfd", depth: 0.75, front: false, m: [372, 498] },
+      { x: 348,    y: 951.25, c: "#58dce8", depth: 1.0,  front: false, m: [88, 788.5] },
+      { x: 952,    y: 443,    c: "#d6d0fd", depth: 0.9,  front: false, m: [256, 369] },
+      { x: 245.96, y: 327,    c: "#ffca4e", depth: 1.25, front: true,  m: [63.5, 239.8] },
+      { x: 897.82, y: 771,    c: "#54c88d", depth: 1.6,  front: true,  m: [241, 689.5] },
+      { x: 183,    y: 70.5,   c: "#58dce8", depth: 0.4,  front: false, m: [141, 61.5] },
+      { x: 1267,   y: 941.2,  c: "#ffca4e", depth: 1.1,  front: false, m: [323.6, 815.5] },
+      { x: 1067,   y: 938.1,  c: "#d6d0fd", depth: 1.45, front: true,  m: [44.2, 640.5] },
+      { x: 417,    y: 161.3,  c: "#fb4c03", depth: 0.6,  front: false },
+      { x: 125,    y: 501,    c: "#fbcbfd", depth: 0.85, front: false },
+      { x: 1186,   y: 677.5,  c: "#fb4c03", depth: 1.3,  front: true },
+      { x: 8,      y: 855.3,  c: "#ffca4e", depth: 1.4,  front: true },
+      { x: 75,     y: 1012,   c: "#fb4c03", depth: 1.7,  front: true },
+      { x: null,               c: "#77574a", depth: 0.7,  front: true,  m: [58.2, 445.8] },
+    ];
+    // and a few more waiting under the hero (b: how far under the screen's bottom edge, in the frame), the same size as
+    // the hero's and as sparse: about as many to the screen and as far apart. They come up through it from the first
+    // bit of scroll, ahead of the first event, so the hero hands over to it gradually; as in the hero, the far ones sit
+    // behind the 2017 and the words and rise slower, the near ones over them and faster.
+    HERO_DOTS.push(
+      { x: 120,  b: 260, c: "#f4511e", depth: 1.3,  front: false },
+      { x: 640,  b: 90,  c: "#0575fb", depth: 1.8,  front: true },
+      { x: 1060, b: 330, c: "#d6d0fd", depth: 1.25, front: false },
+      { x: 1330, b: 120, c: "#58dce8", depth: 1.95, front: true },
+      { x: 470,  b: 560, c: "#ffca4e", depth: 1.35, front: false },
+    );
+    const heroDots = HERO_DOTS.map(d => {
+      const n = document.createElement("span");
+      n.className = "hero-dot";
+      n.style.setProperty("--c", d.c);
+      document.getElementById(d.front ? "heroDotsFront" : "heroDotsBack").appendChild(n);
+      return n;
+    });
+    let dotBox = null;
+    const heroEls = [...opening.querySelectorAll(".hero-block")];
+    let heroBox = null, heroAt = null;
+    function layoutHero() {
+      const W = innerWidth, H = innerHeight;
+      // phones: the blocks keep their place in the frame, stretched to the screen, at a size that still reads
+      const narrow = W < 760, o = narrow ? W / 900 : Math.min(1, W / 1440, H / 1022);
+      heroBox = HERO_BLOCKS.map(b => {
+        const w = b.w * o, h = b.h * o;
+        const x = narrow ? (b.x + b.w / 2) / 1440 * W - w / 2 : W / 2 + (b.x - 720) * o;
+        const y = narrow ? (b.y + b.h / 2) / 1022 * H - h / 2 : H / 2 + (b.y - 511) * o;
+        return { x, y, w, h };
+      });
+      heroEls.forEach((el, i) => {
+        const { x, y, w, h } = heroBox[i];
+        el.style.left = `${x.toFixed(1)}px`; el.style.top = `${y.toFixed(1)}px`;
+        el.style.width = `${w.toFixed(1)}px`; el.style.height = `${h.toFixed(1)}px`;
+      });
+      const fo = narrow ? (W - 16) / 1342 : o, m = heroPhoneScale();
+      // the ones under the hero hang from the screen's bottom edge; on phones the rest sit where the phone frame has
+      // them, from the screen's centre
+      dotBox = HERO_DOTS.map(d => d.b != null ? [narrow ? d.x / 1440 * W : W / 2 + (d.x - 720) * fo, H + d.b * (narrow ? H / 1022 : fo)]
+        : narrow ? (d.m ? [W / 2 + (d.m[0] - 195) * m, H / 2 + (d.m[1] - 422) * m] : null)
+        : d.x != null ? [W / 2 + (d.x - 720) * fo, H / 2 + (d.y - 511) * fo] : null);
+      heroDots.forEach((n, i) => {
+        n.hidden = !dotBox[i];
+        if (dotBox[i]) { n.style.left = `${dotBox[i][0].toFixed(1)}px`; n.style.top = `${dotBox[i][1].toFixed(1)}px`; }
+      });
+      heroAt = null;
+    }
+    // the blue words over the 2017 rise too, in reading order: "so" first, then "what", "happened", "in" and the "?"
+    // under the 2017 last, each a
+    // little after the one before (HERO_WORDS.step of the opening's scroll), all at the same pace (depth, as for the
+    // squares), so they peel off the top one after another
+    const HERO_WORDS = { step: 0.07, depth: 0.75 };
+    const heroWords = [".opening__so", ".opening__what", ".opening__happened", ".opening__in", ".opening__q"].map(s => opening.querySelector(s));
+    // h: how far through the opening's OPEN viewports the scroll is. The squares rise ever faster as it goes (an
+    // ease-in), each at its own depth, so they are already on the move before the first event comes up behind them.
+    function renderHero(h) {
+      if (!heroBox) return;
+      const e = reduceMotion ? 0 : h;
+      if (e === heroAt) return;
+      heroAt = e;
+      const W = innerWidth, H = innerHeight;
+      const lift = Math.pow(e, 1.3) * OPEN;
+      heroWords.forEach((n, i) => {
+        const a = i * HERO_WORDS.step, w = clamp((e - a) / (1 - a), 0, 1);
+        const dy = -Math.pow(w, 1.3) * OPEN * HERO_WORDS.depth * H;
+        n.style.translate = dy ? `0 ${dy.toFixed(1)}px` : "";
+      });
+      heroDots.forEach((n, i) => {
+        const dy = -lift * HERO_DOTS[i].depth * H;
+        n.style.transform = dy ? `translate3d(0, ${dy.toFixed(1)}px, 0)` : "";
+      });
+      heroEls.forEach((el, i) => {
+        const b = HERO_BLOCKS[i], box = heroBox[i];
+        const dy = -e * b.depth * H;
+        el.style.transform = dy ? `translate3d(0, ${dy.toFixed(1)}px, 0)` : "";
+        // where it is against the frame's centre (sideways counts half: the scroll runs up and down)
+        const vx = W / 2 - (box.x + box.w / 2), vy = H / 2 - (box.y + box.h / 2 + dy);
+        const d = Math.hypot(vx / W, 2 * vy / H);
+        const near = 1 - smoothstep(0.1, 1.1, d);
+        // as in Figma 5216-8300: a top-to-bottom gradient from white to the event's colour on the side that faces the
+        // centre. The colour only moves up and down inside the block: it sits at the block's edge nearer the centre
+        // (bottom for a block above it, top for one below) and moves into its middle as the block crosses the centre;
+        // far away it greys, near the centre it is the full colour and spreads
+        const peak = 50 + 50 * clamp(1.5 * vy / (H / 2), -1, 1), spread = 55 + 30 * near;
+        const col = `color-mix(in oklab, ${b.c} ${(25 + 75 * near).toFixed(1)}%, ${HERO_GREY})`;
+        el.style.background = `linear-gradient(180deg, #fff ${(peak - spread).toFixed(1)}%, ${col} ${peak.toFixed(1)}%, #fff ${(peak + spread).toFixed(1)}%)`;
+      });
+    }
+    Site.onLayout(layoutHero);
+
+    // ---- concept 1: a reminder for the event on show, once it has settled; Snooze brings it back a little later ----
+    const toast = document.getElementById("calToast"), toastTitle = document.getElementById("toastTitle");
+    const toastState = { for: -1, shown: false, hiddenAt: 0, dismissed: new Set(), snoozed: new Map() };
+    document.getElementById("toastDismiss").addEventListener("click", () => toastState.dismissed.add(toastState.for));
+    document.getElementById("toastSnooze").addEventListener("click", () => toastState.snoozed.set(toastState.for, performance.now() + 6000));
+    function renderToast(want, i) {
+      const now = performance.now(), s = toastState;
+      want = want && !s.dismissed.has(i) && !(s.snoozed.get(i) > now);
+      if (s.shown && (!want || i !== s.for)) { toast.classList.remove("is-in"); s.shown = false; s.hiddenAt = now; return; }
+      if (!s.shown && want && now - s.hiddenAt > 450) {
+        if (i !== s.for) { s.for = i; toastTitle.textContent = textOf(PAGES[i], "title").replace(/\n/g, " "); toast.style.setProperty("--c", STACK_COLORS[i]); }
+        toast.classList.add("is-in"); s.shown = true;
+      }
+    }
+    const calNow = document.getElementById("calNow");
+    // the hour lines run up with the pile: q is the same eased progress the pile moves on, so they move while a
+    // finished event goes into the pile and stand still with it in between; `lines` hour lines go by per event
+    // (3 × 44 ≈ the newest step's 133), looping
+    const calGrid = document.querySelector(".cal-grid");
+    const GRID = { gap: 44, lines: 3 };
+    let gridAt = null;
+    function renderGrid(q) {
+      if (!stacked) return;
+      const gap = GRID.gap * (innerWidth < 760 ? 1 : stageScale);
+      const off = -((q * GRID.lines * gap) % gap);
+      if (off === gridAt) return;
+      gridAt = off;
+      calGrid.style.setProperty("--grid-y", `${off.toFixed(2)}px`);
+    }
+
+    // the first event's all-day bar goes up out of sight as the page turns to the second event (and comes back with it)
+    const calAllday = document.getElementById("calAllday");
+    let alldayAt = null;
+    function renderAllday(q) {
+      const e = reduceMotion ? (q > 0 ? 1 : 0) : easeInOut(clamp(q * 2, 0, 1));
+      if (e === alldayAt) return;
+      alldayAt = e;
+      calAllday.style.transform = e ? `translateY(${(-e * 24).toFixed(2)}px)` : "";
+      calAllday.style.visibility = e >= 1 ? "hidden" : "";
+    }
+
+    // the hour lines go up off the screen with the pile at the end, and come back with it; the Now line stays on the
+    // bottom edge of the pile's last block (the yellow one), so it goes up with that block, the last to leave
+    let liftAt = null, nowAt = null;
+    function renderLift(p) {
+      const e = reduceMotion ? p : easeInOut(p);
+      if (e !== liftAt) {
+        liftAt = e;
+        calGrid.style.transform = e ? `translateY(${(-e * (calNow.offsetTop + calNow.offsetHeight)).toFixed(1)}px)` : "";
+      }
+      // (phones have no pile: there it goes up with the hour lines, so the thank-you has none)
+      const up = p > 0 ? (isPhone() ? e * (calNow.offsetTop + calNow.offsetHeight) : pileTailUp) : 0;
+      if (up === nowAt) return;
+      nowAt = up;
+      calNow.style.transform = up ? `translateY(${(-up).toFixed(1)}px)` : "";
+    }
+
+    // ---- concept D: "Maybe later" answers, so the invite feels like a real one ----
+    const inviteMaybe = document.getElementById("inviteMaybe");
+    inviteMaybe.addEventListener("click", () => { inviteMaybe.textContent = "We’ll remind you"; });
+    const thanksInvite = document.getElementById("thanksInvite");
+    const inviteTitle = thanksInvite.querySelector(".invite__title");
+
+    setLayout(stacked);
+    Site.onLayout(layout);
+    let enterAt = null;
+    Site.onFrame(y => {
+      // the first event scrolls up over the opening with the page after the hold, and is in place after OPEN viewports
+      const enter = enterOf(y);
+      const away = enter <= 0;
+      if (calLayer.hidden !== away) { calLayer.hidden = away; showBg(shownText); }
+      if (enter !== enterAt) {
+        enterAt = enter;
+        calLayer.style.transform = enter < 1 ? `translateY(${((1 - enter) * 100).toFixed(3)}%)` : "";
+      }
+      const open = enter < 1;
+      // once the first event is in place it covers the opening, which can go (nothing else changes as it lands: the pad
+      // no longer gets thrown up by a gust, which held the scroll and read as a jump)
+      if (opening.classList.contains("is-covered") === open) opening.classList.toggle("is-covered", !open);
+      render(calendarProgress(y));
+      renderOutro(y);
+      // the panels and the pile: the page turns, then the last event going into the pile with the ending
+      // the ending: in version 2 the last event goes into the pile in the first part (PILE_OUT.join), while the
+      // pile scrolls up off the screen, one block after another
+      const join = stacked ? clamp(outroU / PILE_OUT.join, 0, 1) : outroU;
+      const q = (lastRendered || 0) + (reduceMotion ? join : easeInOut(join));
+      pileLift = stacked ? clamp((outroU - PILE_OUT.from) / (1 - PILE_OUT.from), 0, 1) : 0;
+      renderPanels(q);
+      renderHero(clamp((y - intro.offsetTop) / (OPEN * innerHeight), 0, 1));
+      // version 2
+      renderGrid(q);
+      renderAllday(q);
+      renderLift(pileLift);
+      renderThanks(y);
+      renderTimeline(y);
+    });
+    Site.start();
+  </script>
+</body>
+</html>

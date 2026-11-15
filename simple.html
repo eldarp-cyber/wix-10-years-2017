@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Wix Anniversary</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400&family=Pinyon+Script&family=Wix+Madefor+Display:wght@500&family=Wix+Madefor+Text:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    :root { --paper: #ede9e5; --paper-line: #d9d9d9; }
+
+    /* The hero title stays pinned while event cards rise past it — far cards behind it, near cards in front.
+       It comes to rest just above the timeline frame (as in Figma) and then scrolls on with it. */
+    .hero__stage { z-index: 2; }
+
+    /* ---------- Field: cards at different depths over notebook lines ---------- */
+    .field {
+      position: absolute; top: 0; left: 0; right: 0;
+      overflow: clip;            /* lines are full-bleed */
+      pointer-events: none;
+      /* height is set from JS */
+    }
+    /* the 1440-wide Figma composition, scaled down on narrower screens */
+    .field__comp {
+      position: absolute; left: 50%;
+      width: 1440px; height: 0;
+      transform-origin: 50% 0;
+      transform: translateX(-50%) scale(var(--comp-scale, 1));
+    }
+    .field__comp--back  { z-index: 1; }   /* lines + far cards, under the title */
+    .field__comp--front { z-index: 3; }   /* near cards, over the title */
+    .field__lines {
+      position: absolute; left: -1280px; width: 4000px;
+      overflow: hidden; will-change: transform;
+    }
+    .field__lines img { position: absolute; left: 0; width: 100%; height: 647.578px; display: block; }
+
+    .float { position: absolute; left: 0; top: 0; will-change: transform; }
+    .card {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid var(--ink); border-radius: 43.473px;
+      overflow: hidden;
+      transform-origin: 0 0;
+    }
+    .card__art { position: absolute; display: block; max-width: none; }
+    .card__date {
+      position: absolute; width: 80.75px; height: 35.498px;
+      background: var(--bg);
+      border: 1px solid var(--ink); border-radius: 30px;
+    }
+    .card__date span {
+      position: absolute; left: 8.88px; top: 3.25px;   /* Figma 9.88 / 4.25, measured from outside the 1px border */
+      font-size: 20px; font-weight: 400; line-height: normal; white-space: nowrap;
+    }
+
+    /* ---------- Timeline: the big paper frame that scrolls normally ---------- */
+    .timeline { position: relative; z-index: 4; }
+    .timeline__comp {
+      position: absolute; top: 0; left: 50%;
+      width: 1440px;
+      transform-origin: 50% 0;
+      transform: translateX(-50%) scale(var(--comp-scale, 1));
+    }
+    .timeline__frame {
+      position: absolute; left: 49px; top: 0; width: 1345px;
+      background: var(--paper);
+      border-radius: 250px;
+      overflow: hidden;
+    }
+    .timeline__lines { position: absolute; z-index: 0; left: 0.16px; width: 1838px; display: block; max-width: none; pointer-events: none; }
+    /* entries sit above the ruled paper (Figma draws the lines first) */
+    .entry__card, .entry__copy, .entry__date, .entry__rule { z-index: 1; }
+    .entry__card {
+      position: absolute;
+      border: 2px solid var(--ink); border-radius: 80px;
+      background: var(--bg); overflow: hidden;
+    }
+    .entry__card > img { position: absolute; display: block; max-width: none; }
+    .entry__card--paper { background: var(--paper); }   /* small cards (world events) blend into the frame */
+    .entry__date {
+      position: absolute; width: 124.61px; height: 54.779px;
+      background: var(--bg);
+      border: 2px solid var(--ink); border-radius: 46.295px;
+    }
+    .entry__date span {
+      position: absolute; left: 13.23px; top: 4.56px;   /* Figma 15.23 / 6.56, measured from outside the 2px border */
+      font-size: 30.863px; line-height: normal; white-space: nowrap;
+    }
+    .entry__date--small { width: 100.859px; height: 44.659px; }
+    .entry__date--small span { left: 15.24px; font-size: 24px; }
+    .entry__copy { position: absolute; color: var(--ink); }
+    .entry__title {
+      margin: 0;
+      font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif;
+      font-weight: 500; font-size: 52px; line-height: 1; letter-spacing: -0.52px;
+    }
+    .entry__text { position: absolute; left: 0; margin: 0; font-size: 24px; line-height: normal; }
+    .entry__rule { position: absolute; display: block; height: 23px; }
+
+    /* each rule (line + dot) and its date pill slide in together from their side of the frame */
+    .reveal {
+      --x: var(--from, 0px);
+      transform: translateX(var(--x));
+      transition: transform 900ms cubic-bezier(.16, 1, .3, 1);
+      will-change: transform;
+    }
+    .reveal.is-in { --x: 0px; }
+    .entry__rule--flip { transform: translateX(var(--x)) rotate(180deg); }   /* Figma rotates this rule 180° */
+    @media (prefers-reduced-motion: reduce) { .reveal { --x: 0px; transition: none; } }
+
+    /* phones: the timeline stacks in normal flow */
+    @media (max-width: 699px) {
+      .timeline__comp { position: static; width: auto; transform: none; padding: 0 8px; }
+      .timeline__frame {
+        position: static; width: auto; border-radius: 60px;
+        padding: 72px 20px 96px; display: flex; flex-direction: column; gap: 20px;
+      }
+      .entry__copy, .entry__text { position: static !important; width: auto !important; height: auto !important; }
+      .entry__copy { display: flex; flex-direction: column; gap: 16px; }
+      .entry__title { width: auto !important; height: auto !important; }
+      .timeline__lines { display: none; }
+      .entry__title { font-size: 36px; }
+      .entry__text { font-size: 18px; }
+      .entry__card {
+        position: relative !important; inset: auto !important;
+        width: 100% !important; height: auto !important; aspect-ratio: 622 / 723; margin: 8px 0 48px;
+      }
+      .entry__date { position: relative !important; inset: auto !important; order: -1; margin-bottom: 4px; }
+      .reveal { --x: 0px; transition: none; }
+      .entry__rule { display: none; }
+      .entry__card > img { left: 0 !important; top: 0 !important; width: 100% !important; height: 100% !important; object-fit: cover; }
+      .entry__card > img.entry__bg { display: none; }
+      /* each entry: text first, then its card */
+      .entry { display: flex !important; flex-direction: column; }
+      .entry__copy { order: 0; } .entry__card { order: 1; }
+    }
+  </style>
+</head>
+<body data-version="simple">
+  <main>
+    <!-- the hero is inserted here by shared.js -->
+    <div class="field" id="field" aria-hidden="true">
+      <div class="field__comp field__comp--back" id="fieldBack">
+        <div class="field__lines" id="fieldLines"></div>
+      </div>
+      <div class="field__comp field__comp--front" id="fieldFront"></div>
+    </div>
+
+    <section class="timeline" id="timeline" aria-label="2017 timeline">
+      <div class="timeline__comp" id="timelineComp">
+        <div class="timeline__frame" id="timelineFrame">
+          <!-- positions are relative to the frame (Figma: frame at 49, 1956 in the 1440 composition) -->
+          <img class="entry__rule reveal" data-reveal="r1" src="assets/timeline-rule-1.svg" alt="" style="left:-14.52px;top:130.22px;width:597.758px;--from:-760px" />
+          <div class="entry">
+            <div class="entry__date reveal" data-reveal="r1" style="left:600px;top:114.33px;--from:-760px"><span>Jan 31</span></div>
+            <div class="entry__card" style="left:-51px;top:165px;width:622px;height:592px"></div>
+            <div class="entry__copy" style="left:620.62px;top:501.46px;width:631.04px;height:255.54px">
+              <h2 class="entry__title" style="width:589.938px;height:151.542px">We shared our Super Bowl ad with Gal Gadot &amp; Jason Statham</h2>
+              <p class="entry__text" style="top:195.54px;width:631.04px">Gal Gadot &amp; Jason Statham destroyed an entire restaurant in one of the biggest ads we've ever made</p>
+            </div>
+          </div>
+          <div class="entry">
+            <div class="entry__date reveal" data-reveal="r2" style="left:508.7px;top:1660.89px;--from:860px"><span>Feb 23</span></div>
+            <div class="entry__card" style="left:664.12px;top:939px;width:622px;height:723px"></div>
+            <div class="entry__copy" style="left:41.45px;top:939px;width:495.2px;height:204.63px">
+              <h2 class="entry__title" style="width:468.906px;height:100.627px">We acquired DeviantArt</h2>
+              <p class="entry__text" style="top:144.63px;width:495.2px">The world's largest online art community joined us with their 40 million members</p>
+            </div>
+          </div>
+          <!-- Figma rotates this one 180°, so its dot sits on the left -->
+          <img class="entry__rule entry__rule--flip reveal" data-reveal="r2" src="assets/timeline-rule-2.svg" alt="" style="left:646.94px;top:1676.78px;width:759.641px;--from:860px" />
+          <div class="entry">
+            <div class="entry__date entry__date--small" style="left:849.12px;top:1827px"><span>Mar 3</span></div>
+            <div class="entry__card entry__card--paper" style="left:449.12px;top:1878.94px;width:343px;height:297px"></div>
+            <div class="entry__copy" style="left:849.06px;top:1887.78px;width:495.2px;height:343.16px">
+              <h2 class="entry__title" style="width:407.008px;height:149.161px">Nintendo released the Switch</h2>
+              <p class="entry__text" style="top:193.16px;width:347.758px">Half console, half handheld, and suddenly everyone on the bus was playing Zelda</p>
+            </div>
+          </div>
+          <!-- Apr 1 (world event: small card, like Aug 12) -->
+          <div class="entry">
+            <div class="entry__date entry__date--small" style="left:190.06px;top:2347px"><span>Apr 1</span></div>
+            <div class="entry__card entry__card--paper" style="left:900px;top:2398.94px;width:343px;height:297px"></div>
+            <div class="entry__copy" style="left:190px;top:2407.78px;width:495.2px">
+              <h2 class="entry__title" style="width:407.01px">The fidget spinner took over the world</h2>
+              <p class="entry__text" style="top:200px;width:347.76px">It showed up in every school, office and YouTube video as a cure for stress – it mostly just drove teachers crazy</p>
+            </div>
+          </div>
+          <!-- May 17 -->
+          <div class="entry">
+            <div class="entry__date reveal" data-reveal="r4" style="left:508.7px;top:3921.89px;--from:860px"><span>May 17</span></div>
+            <div class="entry__card" style="left:664.12px;top:3200px;width:622px;height:723px"></div>
+            <div class="entry__copy" style="left:41.45px;top:3200px;width:495.2px">
+              <h2 class="entry__title" style="width:468.91px">We launched SEO Wizard</h2>
+              <p class="entry__text" style="top:148px;width:495.2px">A step-by-step plan that helped our users get found on Google</p>
+            </div>
+          </div>
+          <img class="entry__rule entry__rule--flip reveal" data-reveal="r4" src="assets/timeline-rule-2.svg" alt="" style="left:646.94px;top:3937.78px;width:759.641px;--from:860px" />
+          <!-- Jun 22 -->
+          <img class="entry__rule reveal" data-reveal="r5" src="assets/timeline-rule-1.svg" alt="" style="left:-14.52px;top:4130.22px;width:597.758px;--from:-760px" />
+          <div class="entry">
+            <div class="entry__date reveal" data-reveal="r5" style="left:600px;top:4114.33px;--from:-760px"><span>Jun 22</span></div>
+            <div class="entry__card" style="left:-51px;top:4165px;width:622px;height:592px"></div>
+            <div class="entry__copy" style="left:620.62px;top:4501.46px;width:631.04px">
+              <h2 class="entry__title" style="width:589.94px">Karlie Kloss built a website with Wix</h2>
+              <p class="entry__text" style="top:148px;width:631.04px">The supermodel and entrepreneur made her own site and shot a commercial</p>
+            </div>
+          </div>
+          <!-- Jul 9 -->
+          <div class="entry">
+            <div class="entry__date entry__date--small" style="left:849.12px;top:4977px;width:90.6px"><span>Jul 9</span></div>
+            <div class="entry__card entry__card--paper" style="left:449.12px;top:5028.94px;width:343px;height:297px"></div>
+            <div class="entry__copy" style="left:849.06px;top:5037.78px;width:495.2px">
+              <h2 class="entry__title" style="width:407.01px">UNESCO added 21 new World Heritage sites</h2>
+              <p class="entry__text" style="top:200px;width:347.76px">21 more places to add to our bucket list</p>
+            </div>
+          </div>
+          <!-- Aug 12 -->
+          <div class="entry">
+            <div class="entry__date entry__date--small" style="left:190.06px;top:5497px;width:110.6px"><span>Aug 12</span></div>
+            <div class="entry__card entry__card--paper" style="left:900px;top:5548.94px;width:343px;height:297px"></div>
+            <div class="entry__copy" style="left:190px;top:5557.78px;width:495.2px">
+              <h2 class="entry__title" style="width:407.01px">Usain Bolt ran his last race</h2>
+              <p class="entry__text" style="top:148px;width:347.76px">The fastest man in the world pulled up injured in the relay final in London – not the ending anyone wanted</p>
+            </div>
+          </div>
+          <!-- Sep 12 (world event: small card, like Jul 9) -->
+          <div class="entry">
+            <div class="entry__date entry__date--small" style="left:849.12px;top:6017px;width:109.6px"><span>Sep 12</span></div>
+            <div class="entry__card entry__card--paper" style="left:449.12px;top:6068.94px;width:343px;height:297px"></div>
+            <div class="entry__copy" style="left:849.06px;top:6077.78px;width:495.2px">
+              <h2 class="entry__title" style="width:407.01px">The iPhone X arrived with Face ID</h2>
+              <p class="entry__text" style="top:200px;width:347.76px">The home button was gone, and we all started unlocking our phones by staring at them</p>
+            </div>
+          </div>
+          <!-- Oct 15 -->
+          <div class="entry">
+            <div class="entry__date entry__date--small" style="left:849.12px;top:6777px;width:107.6px"><span>Oct 15</span></div>
+            <div class="entry__card entry__card--paper" style="left:449.12px;top:6828.94px;width:343px;height:297px"></div>
+            <div class="entry__copy" style="left:849.06px;top:6837.78px;width:495.2px">
+              <h2 class="entry__title" style="width:407.01px">#MeToo became a global movement</h2>
+              <p class="entry__text" style="top:200px;width:347.76px">Millions of women shared their stories, and the conversation about harassment and accountability changed for good</p>
+            </div>
+          </div>
+          <!-- Nov 27 -->
+          <div class="entry">
+            <div class="entry__date entry__date--small" style="left:190.06px;top:7297px;width:112.6px"><span>Nov 27</span></div>
+            <div class="entry__card entry__card--paper" style="left:900px;top:7348.94px;width:343px;height:297px"></div>
+            <div class="entry__copy" style="left:190px;top:7357.78px;width:495.2px">
+              <h2 class="entry__title" style="width:407.01px">Harry &amp; Meghan announced their engagement</h2>
+              <p class="entry__text" style="top:200px;width:347.76px">The whole world immediately started planning the wedding</p>
+            </div>
+          </div>
+          <!-- Dec 5 -->
+          <div class="entry">
+            <div class="entry__date reveal" data-reveal="r6" style="left:508.7px;top:8610.89px;--from:860px"><span>Dec 5</span></div>
+            <div class="entry__card" style="left:664.12px;top:7889px;width:622px;height:723px"></div>
+            <div class="entry__copy" style="left:41.45px;top:7889px;width:495.2px">
+              <h2 class="entry__title" style="width:468.91px">We introduced Wix Code</h2>
+              <p class="entry__text" style="top:148px;width:495.2px">It let anyone add custom code, databases and dynamic pages to a Wix site, opening the platform to developers</p>
+            </div>
+          </div>
+          <img class="entry__rule entry__rule--flip reveal" data-reveal="r6" src="assets/timeline-rule-2.svg" alt="" style="left:646.94px;top:8626.78px;width:759.641px;--from:860px" />
+          <!-- ruled paper further down the frame -->
+          <img class="timeline__lines" src="assets/paper-lines-499.svg" alt="" style="top:3841.2px;height:501px" />
+          <img class="timeline__lines" src="assets/paper-lines-418.svg" alt="" style="top:4340.2px;height:420px" />
+          <img class="timeline__lines" src="assets/paper-lines-372.svg" alt="" style="top:4818.2px;height:374px" />
+          <img class="timeline__lines" src="assets/paper-lines-499.svg" alt="" style="top:5190.2px;height:501px" />
+          <img class="timeline__lines" src="assets/paper-lines-418.svg" alt="" style="top:5754.2px;height:420px" />
+          <img class="timeline__lines" src="assets/paper-lines-372.svg" alt="" style="top:6232.2px;height:374px" />
+          <img class="timeline__lines" src="assets/paper-lines-499.svg" alt="" style="top:6604.2px;height:501px" />
+          <img class="timeline__lines" src="assets/paper-lines-418.svg" alt="" style="top:7103.2px;height:420px" />
+          <img class="timeline__lines" src="assets/paper-lines-372.svg" alt="" style="top:7581.2px;height:374px" />
+          <img class="timeline__lines" src="assets/paper-lines-439.svg" alt="" style="top:7953.2px;height:441.344px" />
+          <img class="timeline__lines" src="assets/paper-lines-372.svg" alt="" style="top:8451.31px;height:374px" />
+          <img class="timeline__lines" src="assets/paper-lines-439.svg" alt="" style="top:8823.31px;height:441.344px" />
+          <img class="timeline__lines" src="assets/paper-lines-264.svg" alt="" style="top:9323.31px;height:266.206px" />
+          <img class="timeline__lines" src="assets/paper-lines-156.svg" alt="" style=" left:2.16px;top:9637.31px;height:158.412px" />
+          <img class="timeline__lines" src="assets/paper-lines-439.svg" alt="" style="top:9844.31px;height:441.344px" />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="shared.js"></script>
+  <script>
+    // "simple" version: event cards rise past the pinned hero title, the title comes to rest just above the
+    // timeline frame, and from there the page scrolls normally.
+    const fieldEl = document.getElementById("field");
+    const fieldBack = document.getElementById("fieldBack");
+    const fieldFront = document.getElementById("fieldFront");
+    const fieldLines = document.getElementById("fieldLines");
+    const timeline = document.getElementById("timeline");
+    const timelineComp = document.getElementById("timelineComp");
+    const timelineFrame = document.getElementById("timelineFrame");
+
+    // ---- Figma composition (1440 wide), all y values in its coordinates ----
+    const COMP_W = 1440;
+    const TITLE_Y = 1561;          // top of "So what happened" in the composition
+    const FRAME_Y = 1956;          // top of the timeline frame
+    const FRAME_H = 8899;          // timeline frame (Figma), all twelve 2017 events
+    const TITLE_TOP = -189.39;     // "So what" top relative to the hero composition centre (shared.css)
+    const MOBILE = 700;
+
+    // Cards (reading order) — position/size, the date pill spot, optional art ({ src, x, y, w, h }), and a depth:
+    // how much faster than the page the card rises (higher = closer to you, passes in front of the title).
+    const CARDS = [
+      { x: 566.88, y: -62.06, w: 338, h: 370, pill: [238.34, 12.98], depth: 0.12 },
+      { x: 87.66, y: 258.88, w: 338, h: 263, pill: [238.34, 12.55], depth: 0.38 },
+      { x: 929, y: 381, w: 338, h: 370, pill: [238.0, 12.44], depth: 0.24 },
+      { x: 439.82, y: 558.23, w: 338, h: 370, pill: [238.18, 12.21], depth: 0.6 },
+      { x: 979, y: 928, w: 419, h: 291, pill: [323.0, 12.44], depth: 0.08 },
+      { x: 256.66, y: 1105.46, w: 338, h: 370, pill: [238.34, 12.98], depth: 0.45 },
+    ];
+    const FRONT_DEPTH = 0.3;      // cards rising at least this fast pass in front of the title
+    const LINES_DEPTH = -0.08;    // the paper sits furthest back: it rises a little slower than the page
+    // notebook lines: three repeats from y 76.45, the last one cut off at y 1824 (Figma)
+    const LINES_TOP = 76.45, LINES_BOTTOM = 1824, LINES_PERIOD = 717.51;
+
+    // ---- build ----
+    const floats = CARDS.map((c, i) => {
+      const f = document.createElement("div");
+      f.className = "float";
+      f.style.zIndex = String(Math.round(c.depth * 100) + 1);   // closer cards paint above further ones
+      f.innerHTML = `
+        <article class="card" style="width:${c.w}px;height:${c.h}px">
+          ${c.art ? `<img class="card__art" src="${c.art.src}" alt="" loading="lazy"
+               style="left:${c.art.x}px;top:${c.art.y}px;width:${c.art.w}px;height:${c.art.h}px" />` : ""}
+          <div class="card__date" style="left:${c.pill[0]}px;top:${c.pill[1]}px"><span>${EVENTS[i % EVENTS.length].date}</span></div>
+        </article>`;
+      (c.depth >= FRONT_DEPTH ? fieldFront : fieldBack).appendChild(f);
+      return { el: f, card: f.firstElementChild, cfg: c, x: 0, y: 0, s: 1 };
+    });
+    fieldLines.style.top = `${LINES_TOP}px`;
+    fieldLines.style.height = `${LINES_BOTTOM - LINES_TOP}px`;
+    for (let top = 0; top < LINES_BOTTOM - LINES_TOP; top += LINES_PERIOD) {
+      const img = document.createElement("img");
+      img.src = "assets/notebook-lines.svg"; img.alt = "";
+      img.style.top = `${top.toFixed(2)}px`;
+      fieldLines.appendChild(img);
+    }
+
+    // ---- layout ----
+    // S: composition scale; U: scroll distance the title stays pinned; D0: document y of the composition's top.
+    let S = 1, U = 0, D0 = 0, depthScale = 1;
+
+    function layout() {
+      const vw = innerWidth, vh = innerHeight;
+      const mobile = vw < MOBILE;
+      let titleY, frameY, heroScale;
+
+      if (!mobile) {
+        // title and cards share one scale so they line up exactly as in Figma
+        S = Math.min(1, vw / COMP_W, (vh - 80) / 520);
+        heroScale = S;
+        depthScale = 1;
+        floats.forEach(f => { f.x = f.cfg.x; f.y = f.cfg.y; f.s = 1; });
+        titleY = TITLE_Y; frameY = FRAME_Y;
+      } else {
+        // phones: cards in one column (viewport px), title below them, then the stacked timeline
+        S = 1;
+        heroScale = parseFloat(getComputedStyle(heroComp).getPropertyValue("--hero-scale")) || 0.5;
+        depthScale = 0.4;
+        let y = 0;
+        floats.forEach((f, i) => {
+          f.s = Math.min(1, (vw * 0.78) / f.cfg.w);
+          f.x = i % 2 === 0 ? 16 : vw - 16 - f.cfg.w * f.s;
+          f.y = y;
+          y += f.cfg.h * f.s + 40;
+        });
+        titleY = y + 160;
+        frameY = titleY + (FRAME_Y - TITLE_Y) * heroScale;
+      }
+      heroComp.style.setProperty("--hero-scale", heroScale.toFixed(4));
+      [fieldBack, fieldFront, timelineComp].forEach(c => c.style.setProperty("--comp-scale", S.toFixed(4)));
+      floats.forEach(f => { f.card.style.transform = f.s === 1 ? "" : `scale(${f.s.toFixed(4)})`; });
+      fieldLines.style.display = mobile ? "none" : "";
+
+      // The composition starts just below the first screen; the title is released when its composition spot
+      // reaches its pinned spot on screen, so it lands right above the timeline frame.
+      D0 = vh + 80 * S;
+      U = D0 + titleY * S - (vh / 2 + TITLE_TOP * heroScale);
+      hero.style.height = `${(U + vh).toFixed(1)}px`;
+      [fieldBack, fieldFront].forEach(c => { c.style.top = `${D0.toFixed(1)}px`; });
+
+      const frameTop = D0 + frameY * S;            // document y of the timeline frame
+      timeline.style.marginTop = `${(frameTop - (U + vh)).toFixed(1)}px`;
+      if (!mobile) {
+        timelineFrame.style.height = `${FRAME_H}px`;
+        timelineComp.style.height = `${FRAME_H}px`;
+        timeline.style.height = `${(FRAME_H * S + 160).toFixed(1)}px`;
+      } else {
+        timelineFrame.style.height = timelineComp.style.height = timeline.style.height = "";
+      }
+      fieldEl.style.height = `${frameTop.toFixed(1)}px`;
+    }
+
+    function renderField(y) {
+      // < 0 while the title is pinned; from 0 on every card sits at its Figma spot and scrolls with the page
+      const s = Math.min(0, (y - U) / S);
+      floats.forEach(f => {
+        const dy = -s * f.cfg.depth * depthScale;
+        f.el.style.transform = `translate(${f.x.toFixed(2)}px, ${(f.y + dy).toFixed(2)}px)`;
+      });
+      fieldLines.style.transform = `translateY(${(-s * LINES_DEPTH).toFixed(2)}px)`;
+    }
+
+    // ---- rules + date pills slide in when their rule reaches the screen ----
+    const revealGroups = {};
+    document.querySelectorAll("[data-reveal]").forEach(el => (revealGroups[el.dataset.reveal] ||= []).push(el));
+    // The moving pieces start outside the frame (clipped), so watch a still marker on each rule's line.
+    // Checked every frame, so a rule you jump past (e.g. via the header link) still ends up in place.
+    const revealMarkers = Object.entries(revealGroups).map(([key, group]) => {
+      const rule = group.find(el => el.classList.contains("entry__rule")) || group[0];
+      const marker = document.createElement("span");
+      marker.setAttribute("aria-hidden", "true");
+      marker.style.cssText = `position:absolute;left:50%;top:${rule.style.top};width:1px;height:23px;pointer-events:none`;
+      timelineFrame.appendChild(marker);
+      return { marker, group, done: false };
+    });
+    Site.onFrame(() => {
+      for (const r of revealMarkers) {
+        if (r.done) continue;
+        if (r.marker.getBoundingClientRect().top < innerHeight * 0.8) {
+          r.group.forEach(el => el.classList.add("is-in"));
+          r.done = true;
+        }
+      }
+    });
+
+    // the dot and the countdown run while the title is pinned and the cards rise past it
+    Site.setHeroRange(() => ({ start: 0, length: U }));
+    Site.onLayout(layout);
+    Site.onFrame(renderField);
+    Site.start();
+  </script>
+</body>
+</html>
