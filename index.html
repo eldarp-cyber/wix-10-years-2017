@@ -582,13 +582,14 @@
         top: var(--mdt, 153px); width: calc(100% - 32px); font-size: 15px; line-height: 19px; text-wrap: wrap;
       }
       body.stack .cal-desc br { display: inline; }
-      /* the panel shows its phone picture (390 × 608 from its top edge), whole, sitting on the screen's bottom edge,
-         over the panel's colour as set there */
+      /* the panel shows its phone picture (390 × 608 from its top edge), filling it edge to edge: on screens of
+         another shape (tablets, short phones) it is scaled up to cover and cropped, a little more off the bottom than
+         the top so what sits high in it stays (over the panel's colour as set there) */
       body.stack .cal-panel { background-color: var(--v2m, var(--v2, var(--bg))) !important; }
       body.stack .cal-panel img.cal-panel__v2 { display: none; }
       body.stack .cal-panel img.cal-panel__m {
         display: block; left: 0; top: 0; width: 100%; height: 100%; transform: none;
-        object-fit: contain; object-position: 50% 100%;
+        object-fit: cover; object-position: 50% 40%;
       }
       /* the chip, smaller (54 × 26, its square 9) */
       body.stack .cal-chip {
@@ -599,6 +600,24 @@
       body.panels.stack .calendar { left: 50%; top: calc(100% - var(--cal-cy, 112px)); }
     }
     .cal-panel__m { display: none; }
+    /* tablets: every event shows the wide screen's picture instead of the phone's (cropped to a wider panel, the
+       phone pictures lose too much), whole across the width, over the colour round its edges: a little above the
+       middle, or on the bottom edge for the ones whose subject runs off the picture's bottom (--v2wy, from JS) */
+    @media (min-width: 600px) and (max-width: 759px) {
+      body.stack .cal-panel--wide { background-color: var(--v2w) !important; }
+      body.stack .cal-panel--wide img.cal-panel__m { display: none; }
+      body.stack .cal-panel--wide img.cal-panel__v2 {
+        display: block; left: 0; top: 0; width: 100%; height: 100%; transform: none;
+        object-fit: contain; object-position: 50% var(--v2wy, 40%);
+      }
+      /* the textured ones: their tall version, its background over the whole panel, the picture in the same place */
+      body.stack .cal-panel--tall img.cal-panel__v2 { display: none; }
+      body.stack .cal-panel--tall img.cal-panel__t {
+        display: block; left: 0; top: 0; width: 100%; height: 100%; transform: none;
+        object-fit: cover; object-position: 50% var(--v2wy, 40%);
+      }
+    }
+    .cal-panel__t { display: none; }
   </style>
 </head>
 <body data-version="new" data-hero="none">
@@ -731,17 +750,19 @@
     // phones (Figma 5303-235, 390 × 844 frames): each event's title and paragraph as set there, and its panel picture
     // made there (390 × 608 from the panel's top edge, with the panel's own colour round it; assets/panel-m)
     const V2_PHONE = [
-      { bg: "#0575fb", title: "We shared our Super\nBowl ad with Gal\nGadot & Jason Statham", body: "Gal Gadot & Jason Statham destroyed an\nentire restaurant in one of the\nbiggest ads we've ever made" },
-      { bg: "#fa4d04", title: "We acquired\nDeviantArt", body: "The world's largest online art community\njoined us with their 40 million members" },
-      { bg: "#54c88b", title: "Nintendo released\nthe Switch", body: "Half console, half handheld, and suddenly\neveryone on the bus was playing Zelda" },
-      { bg: "#d6d0fd", title: "We launched\nSEO Wizard", body: "A step-by-step plan that helped\nour users get found on Google" },
-      { bg: "#fbcbfd", title: "Karlie Kloss built\na website with Wix", body: "The supermodel and entrepreneur made\nher own site and shot a commercial" },
-      { bg: "#77574a", title: "Usain Bolt ran\nhis last race", body: "The fastest man in the world pulled up injured\nin the relay final in London –\nnot the ending anyone wanted" },
-      { bg: "#58dce8", title: "Harry & Meghan\nannounced their\nengagement", body: "The whole world immediately started\nplanning the wedding", line: 26 },
-      { bg: "#fece11", title: "We introduced\nWix Code", body: "It let anyone add custom code, databases\nand dynamic pages to a Wix site,\nopening the platform to developers" },
+      { bg: "#0575fb", wide: "#0d7ffb", wideAt: "100%", title: "We shared our Super\nBowl ad with Gal\nGadot & Jason Statham", body: "Gal Gadot & Jason Statham destroyed an\nentire restaurant in one of the\nbiggest ads we've ever made" },
+      { bg: "#fa4d04", wide: "#fa4d02", title: "We acquired\nDeviantArt", body: "The world's largest online art community\njoined us with their 40 million members" },
+      { bg: "#54c88b", wide: "#54ca8e", title: "Nintendo released\nthe Switch", body: "Half console, half handheld, and suddenly\neveryone on the bus was playing Zelda" },
+      { bg: "#d6d0fd", wide: "#d7d1fd", title: "We launched\nSEO Wizard", body: "A step-by-step plan that helped\nour users get found on Google" },
+      { bg: "#fbcbfd", wide: "#fbcbfd", wideAt: "100%", title: "Karlie Kloss built\na website with Wix", body: "The supermodel and entrepreneur made\nher own site and shot a commercial" },
+      { bg: "#77574a", wide: "#77574a", title: "Usain Bolt ran\nhis last race", body: "The fastest man in the world pulled up injured\nin the relay final in London –\nnot the ending anyone wanted" },
+      { bg: "#58dce8", wide: "#56dce8", wideAt: "100%", title: "Harry & Meghan\nannounced their\nengagement", body: "The whole world immediately started\nplanning the wedding", line: 26 },
+      { bg: "#fece11", wide: "#ffd10c", title: "We introduced\nWix Code", body: "It let anyone add custom code, databases\nand dynamic pages to a Wix site,\nopening the platform to developers" },
     ];
     V2.forEach((v, i) => { v.phone = { ...V2_PHONE[i], img: v.img.replace("panel-v2/", "panel-m/") }; });
     const isPhone = () => innerWidth < 760;
+    // the wide pictures whose background has a grain (or Aug's lanes), which tablets show on a tall version of it
+    const TALL_PICS = ["jan-31", "jun-22", "aug-12", "nov-27"].map(n => `assets/panel-v2/${n}.jpg`);
     // the date card on phones: its front page's width, and its middle's height above the screen's bottom edge
     const PHONE_CARD = { w: 142, cy: 112 };
     let wasNarrow = null;
@@ -1175,6 +1196,23 @@
         mpic.src = page.v2.phone.img;
         node.style.setProperty("--v2m", page.v2.phone.bg);
         node.appendChild(mpic);
+        // (these show the wide screen's picture on tablets instead, whole, on the colour round its edges)
+        if (page.v2.phone.wide) {
+          node.classList.add("cal-panel--wide");
+          node.style.setProperty("--v2w", page.v2.phone.wide);
+          if (page.v2.phone.wideAt) node.style.setProperty("--v2wy", page.v2.phone.wideAt);
+        }
+        // the ones with a textured background have a tall version of it, the background carried on over the whole panel
+        // (assets/panel-t: 1440 × 2304, the picture where --v2wy puts it)
+        if (TALL_PICS.includes(page.v2.img)) {
+          const tpic = document.createElement("img");
+          tpic.className = "cal-panel__t";
+          tpic.alt = "";
+          tpic.loading = innerWidth >= 600 && innerWidth < 760 ? "eager" : "lazy";
+          tpic.src = page.v2.img.replace("panel-v2/", "panel-t/");
+          node.classList.add("cal-panel--tall");
+          node.appendChild(tpic);
+        }
       }
       // version 2: the event chip on the panel
       const chip = document.createElement("span");
