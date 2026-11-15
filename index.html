@@ -393,27 +393,62 @@
     .thanks__ring { z-index: 19; }
     .thanks__invite p { margin: 0; }
     .invite__title {
-      position: absolute; left: 50%; top: calc(373.45px * var(--ts)); width: calc(584.76px * var(--ts)); transform: translateX(-50%);
+      position: absolute; left: 50%; top: calc(299.44px * var(--ts)); width: calc(584.76px * var(--ts)); transform: translateX(-50%);
       font-family: "Wix Madefor Display", "Wix Madefor Text", system-ui, sans-serif; font-weight: 500;
       font-size: calc(34px * var(--ts)); line-height: normal; letter-spacing: -0.01em; text-transform: uppercase; text-align: center;
     }
     .invite__line {
-      position: absolute; left: 50%; top: calc(469.42px * var(--ts)); transform: translateX(-50%);
+      position: absolute; left: 50%; top: calc(395.41px * var(--ts)); transform: translateX(-50%);
       font-weight: 500; font-size: calc(21px * var(--ts)); line-height: calc(24px * var(--ts)); white-space: pre;
     }
-    .invite__rsvp {
-      position: absolute; left: calc(50% - 143px * var(--ts)); top: calc(532.37px * var(--ts));
-      width: calc(286px * var(--ts)); height: calc(48px * var(--ts)); pointer-events: auto;
+    /* the gifts (Figma 5324-1251): four of them under the line, each its title, its description and a button; --u is
+       the frame's scale (--ts here, --m on phones). Choosing one: it goes to the middle (its middle at the frame's
+       x 720, y 599), its button turns grey ("Gift chosen") and a green tick comes up at its top right corner, while
+       the other three fade away */
+    .thanks__invite { --u: var(--ts); }
+    .invite__gifts { position: absolute; inset: 0; }
+    .gift {
+      position: absolute; left: calc(var(--gx) * 1px * var(--u)); top: calc(var(--gy) * 1px * var(--u));
+      width: calc(var(--gw) * 1px * var(--u)); display: flex; flex-direction: column; align-items: center; text-align: center;
+      transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.45s ease;
     }
-    .invite__btn {
-      position: absolute; top: 0; appearance: none; border: 0; cursor: pointer; text-decoration: none;
+    .thanks__invite .gift__title { font-weight: 500; font-size: calc(21px * var(--u)); line-height: calc(24px * var(--u)); white-space: nowrap; }
+    .thanks__invite .gift__body {
+      flex: none; width: calc(var(--bw) * 1px * var(--u)); margin-top: calc(10px * var(--u));
+      font-weight: 500; font-size: calc(14px * var(--u)); line-height: calc(18px * var(--u));
+    }
+    .gift__btn {
+      appearance: none; border: 0; cursor: pointer; pointer-events: auto; flex: none;
       display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box;
-      height: calc(48px * var(--ts)); padding: 0 calc(22px * var(--ts)); border-radius: calc(10px * var(--ts));
-      background: var(--chip); color: var(--ink); font: 500 calc(16px * var(--ts)) "Wix Madefor Text", system-ui, sans-serif; white-space: nowrap;
+      margin-top: calc(32px * var(--u)); height: calc(38px * var(--u)); padding: 0 calc(22px * var(--u)); border-radius: calc(10px * var(--u));
+      background: #d6d0fd; color: var(--ink); font: 500 calc(14px * var(--u)) "Wix Madefor Text", system-ui, sans-serif; white-space: nowrap;
+      transition: background-color 0.3s ease;
     }
-    /* as in Figma 5240-10084: the yes button in the title's blue, the maybe one a shade darker grey than the header's chips */
-    .invite__btn--yes { left: calc(-0.25px * var(--ts)); background: #0773fa; color: #fff; }
-    .invite__btn:not(.invite__btn--yes) { left: calc(152.25px * var(--ts)); min-width: calc(134px * var(--ts)); background: #ebebeb; }
+    .gift__btn:hover { background: #cac2fc; }
+    .gift.is-chosen .gift__btn { background: #ebebeb; cursor: default; }
+    /* the tick: 31 round in light green with a 2px grey ring, its left at the gift's right edge, 28.3 above its top */
+    .gift__check {
+      position: absolute; left: 100%; top: calc(-28.29px * var(--u)); width: calc(31.02px * var(--u)); height: calc(31.02px * var(--u));
+      display: grid; place-items: center; border-radius: 50%; background: #b2ebcd; box-shadow: 0 0 0 calc(2px * var(--u)) #ebebeb;
+      opacity: 0; transform: scale(0.4); pointer-events: none;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+    .gift__check svg { display: block; width: calc(19px * var(--u)); height: calc(14px * var(--u)); }
+    .gift.is-chosen .gift__check {
+      opacity: 1; transform: none;
+      transition: opacity 0.3s ease 0.55s, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.55s;
+    }
+    .gift.is-chosen {
+      transform: translate(calc((720 - var(--gw) / 2 - var(--gx)) * 1px * var(--u)), calc((599 - var(--gh) / 2 - var(--gy)) * 1px * var(--u)));
+    }
+    .invite__gifts.has-choice .gift:not(.is-chosen) { opacity: 0; transform: translateY(calc(12px * var(--u))) scale(0.96); }
+    .invite__gifts.has-choice .gift:not(.is-chosen) .gift__btn { pointer-events: none; }
+    /* the closing line is gone in this version (the gifts are where it was) */
+    body.stack .thanks__footer { display: none !important; }
+    /* on phones, as the choice shortens the page, the whole ending moves with the scroll's catch-up */
+    .thanks.is-choosing .thanks__invite, .thanks.is-choosing .thanks__ring, .thanks.is-choosing .thanks__stripe {
+      transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+    }
     /* the squares: 20 × 20, rounded 5, each placed and turned by JS as it comes round the ellipse */
     .ring__sq {
       position: absolute; left: 0; top: 0; width: calc(20px * var(--ts)); height: calc(20px * var(--ts));
@@ -448,10 +483,15 @@
         font-weight: 600; font-size: calc(24px * var(--m)); line-height: calc(26px * var(--m));
       }
       .invite__line { top: calc(50% - 33.6px * var(--m)); font-size: calc(18px * var(--m)); line-height: calc(24px * var(--m)); }
-      .invite__rsvp { left: calc(50% - 125.2px * var(--m)); top: calc(50% + 23.7px * var(--m)); width: calc(250.4px * var(--m)); height: calc(42px * var(--m)); }
-      .invite__btn { height: calc(40.7px * var(--m)); padding: 0 calc(19.23px * var(--m)); border-radius: calc(8.74px * var(--m)); font-size: calc(14px * var(--m)); }
-      .invite__btn--yes { left: 0; }
-      .invite__btn:not(.invite__btn--yes) { left: calc(133.3px * var(--m)); min-width: calc(117.1px * var(--m)); height: calc(42px * var(--m)); }
+      /* the gifts one under another, 199 wide with their middle at the frame's x 193.24, the first's top at y 520
+         (98 below the frame's middle) and the rest at --my below it (Figma 5324-1043); choosing one brings it up
+         to the first's place, with the tick 39 above its top and 5 in from its right edge */
+      .thanks__invite { --u: var(--m); }
+      .gift {
+        left: calc(50% - 101.26px * var(--m)); top: calc(50% + (98 + var(--my)) * 1px * var(--m)); width: calc(199px * var(--m));
+      }
+      .gift.is-chosen { transform: translateY(calc(var(--my) * -1px * var(--m))); }
+      .gift__check { left: calc(100% - 4.95px * var(--m)); top: calc(-39px * var(--m)); }
       .ring__sq { width: calc(12px * var(--m)); height: calc(12px * var(--m)); margin: calc(-6px * var(--m)) 0 0 calc(-6px * var(--m)); border-radius: calc(3px * var(--m)); }
       body.stack .thanks__footer-text {
         left: 0; width: calc(256px * var(--m)); margin: 0 auto; padding: 0;
@@ -481,6 +521,8 @@
     body.framed.has-bg.on-thanks .header__brand, body.framed.has-bg.on-thanks .header__link { background: var(--chip); }
     .header__seg { transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1); transition-delay: calc(var(--i) * 45ms); }
     body.on-thanks .header__seg { transform: translateY(-34px); }
+    /* phones: once the ending scrolls on to its gifts they go under the header, so it gets its white band back */
+    body.on-thanks.thanks-past .header, body.panels.has-bg.on-thanks.thanks-past .header { background: var(--bg); }
     @media (prefers-reduced-motion: reduce) { .header__seg { transition: none; } }
     .thanks__stripe { position: absolute; left: 0; right: 0; top: 0; will-change: transform; }
     /* version 2: the stripes are the year's events as all-day bars in a calendar, top to bottom in date order —
@@ -647,9 +689,33 @@
           <div class="thanks__invite" id="thanksInvite">
             <p class="invite__title">It’s amazing to<br class="m-br" /> see how far we’ve<br class="m-br" /> come in 10 years!</p>
             <p class="invite__line">we couldn’t have done it without you</p>
-            <div class="invite__rsvp">
-              <a class="invite__btn invite__btn--yes" href="#gift">choose a gift</a>
-              <button class="invite__btn" type="button" id="inviteMaybe">Maybe later</button>
+            <!-- the four gifts (Figma 5324-1251): --gx/--gy/--gw/--gh their box in the 1440 × 1022 frame, --bw the
+                 description's width, --my their top in the phone column (from the first's) -->
+            <div class="invite__gifts" id="gifts">
+              <div class="gift" style="--gx:228.63; --gy:465; --gw:199; --gh:176; --bw:220.1; --my:0">
+                <p class="gift__title">Wellness treatment</p>
+                <p class="gift__body">Even with our comfy chairs, 10 years of sitting takes its toll. Enjoy a treatment at the Wix Wellness Center.</p>
+                <button class="gift__btn" type="button">choose a gift</button>
+                <span class="gift__check" aria-hidden="true"><svg viewBox="0 0 19 14"><path fill="#25A55A" fill-rule="evenodd" d="M16.4405 0.43906C17.0261 -0.146353 17.9754 -0.146353 18.5609 0.43906C19.1464 1.02447 19.1464 1.97362 18.5609 2.55903L7.55711 13.5609C6.9716 14.1464 6.0223 14.1464 5.43679 13.5609L0.439134 8.56413C-0.146378 7.97871 -0.146378 7.02957 0.439134 6.44416C1.02464 5.85874 1.97395 5.85874 2.55946 6.44416L6.49695 10.381L16.4405 0.43906Z"/></svg></span>
+              </div>
+              <div class="gift" style="--gx:474; --gy:576.4; --gw:193; --gh:164; --bw:193; --my:246">
+                <p class="gift__title">A bottle of<br />aged whiskey</p>
+                <p class="gift__body">Just like you, it only gets<br />better with time.</p>
+                <button class="gift__btn" type="button">choose a gift</button>
+                <span class="gift__check" aria-hidden="true"><svg viewBox="0 0 19 14"><path fill="#25A55A" fill-rule="evenodd" d="M16.4405 0.43906C17.0261 -0.146353 17.9754 -0.146353 18.5609 0.43906C19.1464 1.02447 19.1464 1.97362 18.5609 2.55903L7.55711 13.5609C6.9716 14.1464 6.0223 14.1464 5.43679 13.5609L0.439134 8.56413C-0.146378 7.97871 -0.146378 7.02957 0.439134 6.44416C1.02464 5.85874 1.97395 5.85874 2.55946 6.44416L6.49695 10.381L16.4405 0.43906Z"/></svg></span>
+              </div>
+              <div class="gift" style="--gx:739.56; --gy:576.4; --gw:193; --gh:176; --bw:193; --my:480">
+                <p class="gift__title">Wix swag</p>
+                <p class="gift__body">You can never have too much swag – that’s just a fact. Get a voucher for all things Wix at Wix Whaaat.</p>
+                <button class="gift__btn" type="button">choose a gift</button>
+                <span class="gift__check" aria-hidden="true"><svg viewBox="0 0 19 14"><path fill="#25A55A" fill-rule="evenodd" d="M16.4405 0.43906C17.0261 -0.146353 17.9754 -0.146353 18.5609 0.43906C19.1464 1.02447 19.1464 1.97362 18.5609 2.55903L7.55711 13.5609C6.9716 14.1464 6.0223 14.1464 5.43679 13.5609L0.439134 8.56413C-0.146378 7.97871 -0.146378 7.02957 0.439134 6.44416C1.02464 5.85874 1.97395 5.85874 2.55946 6.44416L6.49695 10.381L16.4405 0.43906Z"/></svg></span>
+              </div>
+              <div class="gift" style="--gx:1001; --gy:493.77; --gw:193; --gh:140; --bw:163; --my:726">
+                <p class="gift__title">A delicious meal</p>
+                <p class="gift__body">Just like you, it only gets<br />better with time.</p>
+                <button class="gift__btn" type="button">choose a gift</button>
+                <span class="gift__check" aria-hidden="true"><svg viewBox="0 0 19 14"><path fill="#25A55A" fill-rule="evenodd" d="M16.4405 0.43906C17.0261 -0.146353 17.9754 -0.146353 18.5609 0.43906C19.1464 1.02447 19.1464 1.97362 18.5609 2.55903L7.55711 13.5609C6.9716 14.1464 6.0223 14.1464 5.43679 13.5609L0.439134 8.56413C-0.146378 7.97871 -0.146378 7.02957 0.439134 6.44416C1.02464 5.85874 1.97395 5.85874 2.55946 6.44416L6.49695 10.381L16.4405 0.43906Z"/></svg></span>
+              </div>
             </div>
           </div>
           <footer class="thanks__footer" id="thanksFooter" hidden>
@@ -789,6 +855,8 @@
     // the header's "2017's timeline" goes to the first event (Jan 31), just in place over the opening
     // (a pixel on, so it lands fully in place whatever the rounding)
     Site.timelineTarget = () => Math.ceil(intro.offsetTop + OPEN * innerHeight) + 1;
+    // "Choose your gift" goes to where the ending is in place (on phones the gifts go on below it)
+    Site.giftTarget = () => document.documentElement.scrollHeight - innerHeight - thanksExtra;
     // After the last event: OUTRO viewports in which the pad scrolls away and the texts roll out.
     const OUTRO = 1;
     // Then THANKS viewports for the thank-you, held in place (its stripes unfold on their own once it shows);
@@ -949,9 +1017,17 @@
 
     const turns = PAGES.length - 1; // the last page stays
 
+    // phones (Figma 5324-1043): the ending is a 1702-high frame (962 once a gift is chosen) — its gifts run on below the
+    // screen — so the page goes on by what of it is below the screen (its top half a screen above the middle), and
+    // the ending scrolls up by that at the end of the page
+    let thanksExtra = 0;
+    function sizeIntro() {
+      const m = heroPhoneScale(), fh = document.getElementById("gifts").classList.contains("has-choice") ? 962 : 1702;
+      thanksExtra = stacked && isPhone() ? Math.max(0, Math.round((fh - 422) * m - innerHeight / 2)) : 0;
+      intro.style.height = `${innerHeight * (1 + OPEN + OUTRO + THANKS - THANKS_LEAD) + turns * innerHeight + thanksExtra}px`;
+    }
     function layout() {
-      const flip = innerHeight; // scroll distance per page turn
-      intro.style.height = `${innerHeight * (1 + OPEN + OUTRO + THANKS - THANKS_LEAD) + turns * flip}px`;
+      sizeIntro();
       const narrow = innerWidth < 760;
       // the opening's 2017 spans the frame; on phones it fills the width instead
       const o = narrow ? (innerWidth - 16) / 1335 : Math.min(1, innerWidth / 1440, innerHeight / 1022);
@@ -992,7 +1068,7 @@
     // progress in "pages turned": 0 … turns, for a (smoothed) scroll position y
     function calendarProgress(y) {
       const start = intro.offsetTop + OPEN * innerHeight;
-      const range = intro.offsetHeight - innerHeight * (1 + OPEN + OUTRO + THANKS - THANKS_LEAD);
+      const range = intro.offsetHeight - thanksExtra - innerHeight * (1 + OPEN + OUTRO + THANKS - THANKS_LEAD);
       if (range <= 0) return 0;
       return clamp((y - start) / range, 0, 1) * turns;
     }
@@ -1590,14 +1666,15 @@
     // follow from it, so each lands exactly where the design has it). Each comes round the ellipse into
     // its place from further down its own side (the right ones up the right, the left ones up the left), turning
     // as it goes, from the middle one out.
-    const RING = { cx: 714.23, cy: 389.5, a: 413.88, b: 190.5, travel: 125, step: 0.11, each: 0.67 };
+    // (Figma 5324-1251: the title, and so the ellipse and its squares, 74 higher in the frame, to make room for the gifts)
+    const RING = { cx: 714.23, cy: 315.5, a: 413.88, b: 190.5, travel: 125, step: 0.11, each: 0.67 };
     // m: the square's centre in the phone frame (Figma 5280-518, 390 × 844), on its own ellipse (RING_M); mc: its colour
     // there when it differs
     const RING_SQ = [
-      { c: "#f2f6fc", x: 714.23, y: 199, k: 0, side: 1, m: [199.2, 216], mc: "#d6d0fd" },
-      { c: "#0773fa", x: 889.5, y: 213, k: 1, m: [272.2, 225] }, { c: "#fecd53", x: 538.97, y: 213, k: 1, m: [115.2, 225] },
-      { c: "#54c88d", x: 1047, y: 277.88, k: 2, m: [337.2, 268] }, { c: "#58dbe6", x: 381.47, y: 277.88, k: 2, m: [50.2, 268] },
-      { c: "#fbcbfd", x: 1128, y: 393, k: 3, m: [357.5, 344] }, { c: "#76574a", x: 300.47, y: 393, k: 3, m: [25, 344] },
+      { c: "#d6d0fd", x: 714.23, y: 125, k: 0, side: 1, m: [199.24, 216] },
+      { c: "#0773fa", x: 889.5, y: 139, k: 1, m: [272.24, 225] }, { c: "#fecd53", x: 538.97, y: 139, k: 1, m: [127.24, 225] },
+      { c: "#54c88d", x: 1047, y: 203.88, k: 2, m: [337.24, 268] }, { c: "#58dbe6", x: 381.47, y: 203.88, k: 2, m: [62.24, 268] },
+      { c: "#fbcbfd", x: 1128, y: 319, k: 3, m: [357.52, 344] }, { c: "#f4511e", x: 300.47, y: 319, k: 3, m: [37, 344], mc: "#76574a" },
     ];
     const RING_M = { cx: 193.7, cy: 344, a: 166, b: 128 };
     const thanksRing = document.getElementById("thanksRing");
@@ -1662,7 +1739,7 @@
     // a glide from here to the end that starts at speed v (px/ms) and comes to rest there: a cubic curve whose
     // starting slope matches v, over a time chosen so it starts `ease` times faster than it goes on average
     function planGlide(v) {
-      const from = scrollY, to = document.documentElement.scrollHeight - innerHeight, d = to - from;
+      const from = scrollY, to = Site.giftTarget(), d = to - from;
       if (d < 2) return null;
       const speed = Math.max(v, 1e-3);
       const ms = clamp(AUTO_END.ease * d / speed, AUTO_END.min, AUTO_END.max);
@@ -1681,7 +1758,7 @@
       if (Site.gliding) { autoArmed = false; return; }
       if (!autoArmed || !down || autoRun) return;
       autoArmed = false;
-      if (reduceMotion) { scrollTo(0, document.documentElement.scrollHeight - innerHeight); return; }
+      if (reduceMotion) { scrollTo(0, Site.giftTarget()); return; }
       autoPlan = planGlide(Math.max(scrollSpeed(), autoSeen));
       if (!autoPlan) return;
       let last = scrollY;
@@ -1710,12 +1787,17 @@
       thanksEl.classList.remove("is-folding");
       document.body.classList.toggle("on-thanks", on);
       thanksT = 0; thanksAt = null; thanksSince = null;
-      if (!on) { footerU = 0; renderFooter(); return; }
+      if (!on) { document.body.classList.remove("thanks-past"); footerU = 0; renderFooter(); return; }
       const p = clamp((y - start) / (THANKS * innerHeight), 0, 1);
       const part = ([a, b]) => { const v = clamp((p - a) / (b - a), 0, 1); return reduceMotion ? v : easeInOut(v); };
       const H = stage.clientHeight, ts = thanksScale;
       const card = part(THANKS_V2.card), cardTop = thanksInvite.offsetTop + inviteTitle.offsetTop; // (the title comes up from the bottom edge)
-      thanksInvite.style.transform = card < 1 ? `translateY(${((1 - card) * (H - cardTop)).toFixed(1)}px)` : "";
+      // (phones: past the end of the ending's own scroll the page goes on, and the ending with it)
+      const past = thanksExtra ? clamp(y - (start + THANKS * innerHeight), 0, thanksExtra) : 0;
+      const up = (1 - card) * (H - cardTop) - past;
+      thanksInvite.style.transform = up ? `translateY(${up.toFixed(1)}px)` : "";
+      thanksRing.style.transform = past ? `translateY(${(-past).toFixed(1)}px)` : "";
+      document.body.classList.toggle("thanks-past", past > 0);
       thanksInvite.style.opacity = ""; thanksInvite.style.visibility = "";
       const ringKey = `${thanksRing.clientWidth}x${thanksRing.clientHeight}@${ts}`;
       if (ringW !== ringKey) { ringW = ringKey; RING_SQ.forEach(sq => { sq.last = null; }); }
@@ -1723,13 +1805,14 @@
       renderRing(ringT);
       // once the title has almost come up to its place, on the way down, the page glides on to the end
       autoEnd(card >= AUTO_END.at, y);
-      placeStripes(clamp((p - THANKS_V2.bars[0]) / (THANKS_V2.bars[1] - THANKS_V2.bars[0]), 0, 1), H, ts);
+      placeStripes(clamp((p - THANKS_V2.bars[0]) / (THANKS_V2.bars[1] - THANKS_V2.bars[0]), 0, 1), H, ts, thanksExtra - past);
       footerU = part(THANKS_V2.footer);
       renderFooter();
     }
     // the stripes (version 2: the bars) at unfold t: each one's bottom edge, from the bottom of the screen (or the
     // stripe below it) up to its place; the frame's bottom stays at the screen's
-    function placeStripes(t, H, ts) {
+    // (below: how far below the screen the frame's bottom still is — phones, on the way down to the gifts)
+    function placeStripes(t, H, ts, below = 0) {
       const unfold = i => reduceMotion ? (t > 0 ? 1 : 0) : easeInOut(clamp((t - i * UNFOLD.step) / UNFOLD.each, 0, 1));
       // phones (version 2, Figma 5280-518): the bars 17 high and 3 apart, the last one's bottom 8 above the frame's
       // bottom edge, each in a 20-high stripe
@@ -1737,7 +1820,7 @@
       // each in a 22-high stripe
       const phone = stacked && isPhone(), pm = heroPhoneScale();
       const box = (stripe, i) => phone ? [817.5 - 20 * i, , 20] : stacked ? [993 - 22 * i, , 22] : stripe;
-      const bottomOf = ([fy, , fh]) => phone ? H - (844 - (fy + fh)) * pm : H - (1022 - (fy + fh)) * ts;
+      const bottomOf = ([fy, , fh]) => phone ? H + below - (844 - (fy + fh)) * pm : H - (1022 - (fy + fh)) * ts;
       let prevBottom = 0;
       STRIPES.forEach((stripe, i) => {
         const e = unfold(i), to = bottomOf(box(stripe, i)), h = box(stripe, i)[2] * (phone ? pm : ts);
@@ -1992,9 +2075,23 @@
       calNow.style.transform = up ? `translateY(${(-up).toFixed(1)}px)` : "";
     }
 
-    // ---- concept D: "Maybe later" answers, so the invite feels like a real one ----
-    const inviteMaybe = document.getElementById("inviteMaybe");
-    inviteMaybe.addEventListener("click", () => { inviteMaybe.textContent = "We’ll remind you"; });
+    // ---- the gifts: choosing one keeps it (in the middle, ticked) and lets the rest go; on phones the page then
+    // gets shorter, and the ending glides with the scroll as it catches up ----
+    const giftsEl = document.getElementById("gifts");
+    let choosing = null;
+    giftsEl.addEventListener("click", e => {
+      const btn = e.target.closest(".gift__btn");
+      if (!btn || giftsEl.classList.contains("has-choice")) return;
+      btn.closest(".gift").classList.add("is-chosen");
+      giftsEl.classList.add("has-choice");
+      btn.textContent = "Gift chosen";
+      btn.setAttribute("aria-pressed", "true");
+      if (!thanksExtra) return;
+      thanksEl.classList.add("is-choosing");
+      clearTimeout(choosing);
+      choosing = setTimeout(() => thanksEl.classList.remove("is-choosing"), 900);
+      sizeIntro();
+    });
     const thanksInvite = document.getElementById("thanksInvite");
     const inviteTitle = thanksInvite.querySelector(".invite__title");
 

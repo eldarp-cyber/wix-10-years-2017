@@ -94,9 +94,11 @@ document.querySelector(".header").addEventListener("click", e => {
   if (!a) return;
   e.preventDefault();
   const end = document.documentElement.scrollHeight - innerHeight, href = a.getAttribute("href");
+  // the gift goes where the page says its ending is in place (the end when it doesn't say)
+  const gift = Site.giftTarget ? Math.min(Site.giftTarget(), end) : end;
   // the timeline goes where the page says its first event is (the end when it doesn't say)
   const first = Site.timelineTarget ? Site.timelineTarget() : end;
-  glideTo(href === "#top" ? 0 : href === "#timeline" ? Math.min(first, end) : end);
+  glideTo(href === "#top" ? 0 : href === "#timeline" ? Math.min(first, end) : gift);
 });
 
 // ---- hero markup (first section of <main>); a page with data-hero="none" brings its own opening ----
