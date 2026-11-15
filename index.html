@@ -321,6 +321,10 @@
       /* the pictures with room round them in the frame (inset in V2) are never scaled past the panel's height: on wider
          screens the event's colour carries on either side (on taller ones above them, as they sit on its bottom edge) */
       body.stack .cal-panel--inset img.cal-panel__v2 { object-fit: contain; object-position: 50% 100%; }
+      /* its block in the pile takes over from the panel with the picture just as it was (the same fit, on the panel's
+         own colour), so nothing moves as the one gives way to the other */
+      body.stack .cal-stack__item img.cal-stack__pic { object-position: 50% 0; background: var(--pc, transparent); }
+      body.stack .cal-stack__item.is-inset img.cal-stack__pic { object-fit: contain; object-position: 50% 100%; }
       body.stack .cal-title {
         top: calc(var(--tt, 100.35) * 1px * var(--s));
         font-size: calc(38px * var(--s)); line-height: calc(46px * var(--s)); letter-spacing: -0.01em;
@@ -1384,6 +1388,8 @@
         pic.src = page.v2.img;
         pic.alt = "";
         node.appendChild(pic);
+        node.style.setProperty("--pc", page.v2.color);
+        if (page.v2.inset) node.classList.add("is-inset");
       }
       // version 2: its name and date, as on an event chip
       const label = document.createElement("span");
